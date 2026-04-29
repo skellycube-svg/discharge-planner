@@ -20,6 +20,12 @@ const ICONS = {
   calendarNav: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
   back: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>',
   chevron: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>',
+  chevronDown: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>',
+  chevronUp: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg>',
+  helpCircle: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>',
+  users: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>',
+  link: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>',
+  printer: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>',
 };
 
 /* Plain English: Returns an HTML string for a single checklist item with a checkbox */
@@ -62,8 +68,8 @@ function renderMedicationCard(med, lang) {
         <span class="med-detail-chip">${med.pharmacy}</span>
         <span class="med-detail-chip">${med.refills} ${DATA.strings[lang].refillsLeft}</span>
       </div>
-      <button class="med-action-btn btn-take" id="med-btn-${med.id}" onclick="toggleMedTaken('${med.id}')">
-        ${DATA.strings[lang].markAsTaken}
+      <button class="med-action-btn ${typeof medTakenState !== 'undefined' && medTakenState[med.id] ? 'btn-taken' : 'btn-take'}" id="med-btn-${med.id}" onclick="toggleMedTaken('${med.id}')">
+        ${typeof medTakenState !== 'undefined' && medTakenState[med.id] ? DATA.strings[lang].taken : DATA.strings[lang].markAsTaken}
       </button>
     </div>`;
 }
@@ -157,6 +163,69 @@ function renderWarningItem(item, lang) {
       <div class="warning-text">${item.text[lang]}</div>
       <div class="warning-action">${item.action[lang]}</div>
     </div>`;
+}
+
+/* Plain English: Returns HTML for a FAQ accordion item */
+function renderFAQItem(item, lang) {
+  return `
+    <div class="faq-item" data-id="${item.id}">
+      <button class="faq-question" onclick="toggleFAQ('${item.id}')">
+        <span>${item.question[lang]}</span>
+        <span class="faq-chevron" id="faq-chevron-${item.id}">${ICONS.chevronDown}</span>
+      </button>
+      <div class="faq-answer hidden" id="faq-answer-${item.id}">
+        <div class="faq-answer-text">${item.answer[lang]}</div>
+      </div>
+    </div>`;
+}
+
+/* Plain English: Returns HTML for a social resource card with eligibility and apply info */
+function renderSocialResourceCard(resource, lang) {
+  const catClass = 'cat-' + resource.category;
+  const catLabel = resource.category.charAt(0).toUpperCase() + resource.category.slice(1);
+  const s = DATA.strings[lang];
+
+  const langTags = resource.languages.map(l =>
+    `<span class="resource-lang-tag">${l}</span>`
+  ).join('');
+
+  return `
+    <div class="social-card">
+      <div class="resource-header">
+        <div class="resource-name">${resource.name}</div>
+        <span class="resource-category-chip ${catClass}">${catLabel}</span>
+      </div>
+      <div class="resource-desc">${resource.description[lang]}</div>
+      <div class="social-detail-section">
+        <div class="social-detail-label">${s.socialEligibility}</div>
+        <div class="social-detail-text">${resource.eligibility[lang]}</div>
+      </div>
+      <div class="social-detail-section">
+        <div class="social-detail-label">${s.socialApply}</div>
+        <div class="social-detail-text">${resource.howToApply[lang]}</div>
+      </div>
+      <div class="resource-info">
+        <div class="resource-info-row">${ICONS.phone} ${resource.phone}</div>
+        <div class="resource-info-row">
+          ${ICONS.globe}
+          <div class="resource-languages">${langTags}</div>
+        </div>
+      </div>
+      <div class="resource-actions">
+        <a href="tel:${resource.phone.replace(/[^0-9+]/g, '')}" class="resource-action-btn btn-call">
+          ${ICONS.phone} ${s.callNow}
+        </a>
+        <a href="${resource.website}" target="_blank" class="resource-action-btn btn-directions">
+          ${ICONS.link} ${s.socialWebsite}
+        </a>
+      </div>
+    </div>`;
+}
+
+/* Plain English: Returns HTML for a chat message bubble */
+function renderChatMessage(text, isUser) {
+  const cls = isUser ? 'chat-msg chat-msg-user' : 'chat-msg chat-msg-bot';
+  return `<div class="${cls}">${text}</div>`;
 }
 
 /* Plain English: Returns HTML for a care instruction item */
