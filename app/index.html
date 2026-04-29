@@ -46,6 +46,34 @@
     <!-- Resources / Community Help Sub-Screen -->
     <div class="screen" id="screen-resources"></div>
 
+    <!-- FAQ Screen -->
+    <div class="screen" id="screen-faq"></div>
+
+    <!-- Social Resources Screen -->
+    <div class="screen" id="screen-social"></div>
+
+    <!-- Chat Overlay -->
+    <div class="chat-overlay hidden" id="chat-overlay">
+      <div class="chat-header">
+        <div class="chat-header-title" id="chat-title">Care Assistant</div>
+        <button class="chat-close-btn" onclick="toggleChat()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-input-row">
+        <input type="text" class="chat-input" id="chat-input" placeholder="Ask about meds, appointments..." onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="chat-send-btn" onclick="sendChat()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat FAB -->
+    <button class="chat-fab" id="chat-fab" onclick="toggleChat()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    </button>
+
     <!-- Bottom Navigation -->
     <nav class="bottom-nav" id="bottom-nav"></nav>
 
