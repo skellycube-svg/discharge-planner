@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chase is Home 💙</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --sky: #e8f4fd;
+      --blue: #2c7be5;
+      --blue-dark: #1a5bb8;
+      --green: #27ae60;
+      --green-light: #eafaf1;
+      --yellow: #f39c12;
+      --yellow-light: #fef9e7;
+      --red: #e74c3c;
+      --red-light: #fdf2f2;
+      --text: #1a2332;
+      --muted: #6b7c93;
+      --white: #ffffff;
+      --card-shadow: 0 4px 20px rgba(44,123,229,0.10);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--sky);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+      color: white;
+      padding: 28px 20px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; left: 0; right: 0;
+      height: 40px;
+      background: var(--sky);
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .choc-badge {
+      font-family: 'Nunito', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.75;
+    }
+    .date-badge {
+      font-size: 12px;
+      opacity: 0.7;
+      background: rgba(255,255,255,0.15);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .header h1 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+    .header p {
+      font-size: 14px;
+      opacity: 0.85;
+      font-weight: 300;
+    }
+
+    /* ── MAIN ── */
+    .main { padding: 28px 16px 0; max-width: 480px; margin: 0 auto; }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-family: 'Nunito', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+
+    /* ── TODAY CARDS ── */
+    .today-cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+
+    .today-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: var(--card-shadow);
+      border-left: 5px solid transparent;
+      transition: transform 0.15s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+    .today-card:active { transform: scale(0.98); }
+    .today-card.green  { border-left-color: var(--green); }
+    .today-card.yellow { border-left-color: var(--yellow); }
+    .today-card.blue   { border-left-color: var(--blue); }
+
+    .card-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .green  .card-icon { background: var(--green-light); }
+    .yellow .card-icon { background: var(--yellow-light); }
+    .blue   .card-icon { background: #eef4fd; }
+
+    .card-body { flex: 1; }
+    .card-body strong {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .card-body span {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .card-arrow { color: var(--muted); font-size: 18px; }
+
+    /* ── MEDS SECTION ── */
+    .meds-section { margin-bottom: 28px; }
+    .med-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin-bottom: 10px;
+      box-shadow: var(--card-shadow);
+    }
+    .med-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .med-name {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+    }
+    .med-nickname {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+    .med-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .tag-rescue  { background: #fde8e8; color: var(--red); }
+    .tag-daily   { background: #eef4fd; color: var(--blue); }
+    .tag-asneeded{ background: var(--yellow-light); color: var(--yellow); }
+
+    .med-schedule {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .schedule-pill {
+      background: #f4f6f9;
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 12px;
+      color: var(--text);
+    }
+    .schedule-pill span { margin-right: 4px; }
+
+    /* ── ALERT CARD ── */
+    .alert-section { margin-bottom: 28px; }
+    .alert-card {
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .alert-card.red    { background: var(--red-light); border: 1.5px solid #f5c6c6; }
+    .alert-card.yellow { background: var(--yellow-light); border: 1.5px solid #fde8a0; }
+    .alert-card.green  { background: var(--green-light); border: 1.5px solid #a9dfbf; }
+    .alert-dot { font-size: 20px; margin-top: 1px; }
+    .alert-body strong {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      display: block;
+      margin-bottom: 3px;
+    }
+    .alert-body p { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+    /* ── CALL BUTTON ── */
+    .call-btn {
+      display: block;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: white;
+      text-align: center;
+      padding: 16px;
+      border-radius: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(44,123,229,0.30);
+      margin-bottom: 10px;
+      transition: transform 0.15s;
+    }
+    .call-btn:active { transform: scale(0.98); }
+    .call-btn small { display: block; font-size: 12px; font-weight: 400; opacity: 0.8; margin-top: 2px; }
+
+    .call-btn-secondary {
+      display: block;
+      background: white;
+      color: var(--red);
+      text-align: center;
+      padding: 14px;
+      border-radius: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: var(--card-shadow);
+      border: 2px solid #f5c6c6;
+    }
+
+    /* ── ANIMATE IN ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .header        { animation: fadeUp 0.4s ease both; }
+    .today-cards   { animation: fadeUp 0.4s 0.1s ease both; }
+    .meds-section  { animation: fadeUp 0.4s 0.2s ease both; }
+    .alert-section { animation: fadeUp 0.4s 0.3s ease both; }
+    .calls-section { animation: fadeUp 0.4s 0.4s ease both; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div class="choc-badge">🏥 CHOC Children's</div>
+      <div class="date-badge">Discharged Mar 13</div>
+    </div>
+    <h1>Welcome home, Chase 💙</h1>
+    <p>Here's everything you need today, Maria.</p>
+  </div>
+
+  <div class="main">
+
+    <!-- TODAY'S PRIORITIES -->
+    <div class="section-label">Do this today</div>
+    <div class="today-cards">
+
+      <a class="today-card green" href="/medications">
+        <div class="card-icon">💊</div>
+        <div class="card-body">
+          <strong>Give Fluticasone inhaler</strong>
+          <span>1 puff — morning &amp; night, every day</span>
+        </div>
+        <div class="card-arrow">›</div>
+      </a>
+
+      <a class="today-card yellow" href="/pickup">
+        <div class="card-icon">🏪</div>
+        <div class="card-body">
+          <strong>Pick up meds at CVS</strong>
+          <span>All 3 prescriptions ready at CVS #16722</span>
+        </div>
+        <div class="card-arrow">›</div>
+      </a>
+
+      <a class="today-card blue" href="/followup">
+        <div class="card-icon">📅</div>
+        <div class="card-body">
+          <strong>Schedule pulmonology follow-up</strong>
+          <span>Call 1-888-770-2462 to book</span>
+        </div>
+        <div class="card-arrow">›</div>
+      </a>
+
+    </div>
+
+    <!-- MEDICATIONS -->
+    <div class="section-label">Chase's medications</div>
+    <div class="meds-section">
+
+      <div class="med-card">
+        <div class="med-header">
+          <div>
+            <div class="med-name">Albuterol HFA</div>
+            <div class="med-nickname">The rescue inhaler 🆘</div>
+          </div>
+          <div class="med-tag tag-rescue">Rescue</div>
+        </div>
+        <div class="med-schedule">
+          <div class="schedule-pill"><span>💨</span>2 puffs</div>
+          <div class="schedule-pill"><span>⏰</span>Every 4–6 hrs if wheezing</div>
+          <div class="schedule-pill"><span>⚠️</span>If needed 2x/week → call doctor</div>
+        </div>
+      </div>
+
+      <div class="med-card">
+        <div class="med-header">
+          <div>
+            <div class="med-name">Fluticasone 44 mcg</div>
+            <div class="med-nickname">The daily controller inhaler 📅</div>
+          </div>
+          <div class="med-tag tag-daily">Daily</div>
+        </div>
+        <div class="med-schedule">
+          <div class="schedule-pill"><span>💨</span>1 puff</div>
+          <div class="schedule-pill"><span>🌅</span>Morning + Night</div>
+          <div class="schedule-pill"><span>🚿</span>Rinse mouth after</div>
+        </div>
+      </div>
+
+      <div class="med-card">
+        <div class="med-header">
+          <div>
+            <div class="med-name">Polyethylene Glycol</div>
+            <div class="med-nickname">For constipation, if needed 💧</div>
+          </div>
+          <div class="med-tag tag-asneeded">As Needed</div>
+        </div>
+        <div class="med-schedule">
+          <div class="schedule-pill"><span>🥄</span>As directed</div>
+          <div class="schedule-pill"><span>📅</span>Once daily if needed</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- WHEN TO WORRY -->
+    <div class="section-label">When to act</div>
+    <div class="alert-section">
+
+      <div class="alert-card red">
+        <div class="alert-dot">🔴</div>
+        <div class="alert-body">
+          <strong>Call 911 immediately</strong>
+          <p>Lips or fingernails turn blue · Rescue inhaler not helping · Severe trouble breathing</p>
+        </div>
+      </div>
+
+      <div class="alert-card yellow">
+        <div class="alert-dot">🟡</div>
+        <div class="alert-body">
+          <strong>Call the nurse line</strong>
+          <p>Wheezing · Shortness of breath · Fever over 100.4°F · Persistent cough · Symptoms not improving</p>
+        </div>
+      </div>
+
+      <div class="alert-card green">
+        <div class="alert-dot">🟢</div>
+        <div class="alert-body">
+          <strong>Watch at home</strong>
+          <p>Mild cough · Some tiredness after hospital stay · Normal for the first day home</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CALL BUTTONS -->
+    <div class="section-label calls-section">Need help?</div>
+    <a class="call-btn" href="tel:18444382462">
+      📞 CHOC Nurse Line — 24/7
+      <small>1-844-GET-CHOC · Free, available anytime</small>
+    </a>
+    <a class="call-btn-secondary" href="tel:911">🚨 Call 911 in an emergency</a>
+
+  </div>
+<script>
+  // ── LANGUAGE — loads saved preference on every page ──
+  (function() {
+    const saved = localStorage.getItem('lang') || 'en';
+    document.body.className = 'lang-' + saved;
+    // set active button if toggle exists on this page
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent === saved.toUpperCase());
+    });
+  })();
+
+  function setLang(lang) {
+    localStorage.setItem('lang', lang);          // remember it
+    document.body.className = 'lang-' + lang;    // apply it
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent === lang.toUpperCase());
+    });
+  }
+
+  // ── CHECKLIST (pickup.html only — safe to ignore on other pages) ──
+  function toggleCheck(item) {
+    item.classList.toggle('checked');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const total = document.querySelectorAll('.check-item').length;
+    const checked = document.querySelectorAll('.check-item.checked').length;
+    const pct = (checked / total) * 100;
+    const fill = document.getElementById('progressFill');
+    const count = document.getElementById('progressCount');
+    const done = document.getElementById('allDoneMsg');
+    if (fill) fill.style.width = pct + '%';
+    if (count) count.textContent = checked + ' / ' + total;
+    if (done) done.style.display = checked === total ? 'block' : 'none';
+  }
+
+  function copyScript() {
+    const lang = localStorage.getItem('lang') || 'en';
+    const scripts = {
+      en: "I'm here to pick up for Chase Clements. There should be three prescriptions — Albuterol, Fluticasone, and Polyethylene Glycol.",
+      es: "Vengo a recoger para Chase Clements. Deben ser tres recetas — Albuterol, Fluticasona y Polietilenglicol."
+    };
+    navigator.clipboard.writeText(scripts[lang]).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.classList.add('copied');
+      btn.querySelector('[data-lang="en"]').textContent = '✓ Copied!';
+      btn.querySelector('[data-lang="es"]').textContent = '✓ ¡Copiado!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.querySelector('[data-lang="en"]').textContent = '📋 Copy to clipboard';
+        btn.querySelector('[data-lang="es"]').textContent = '📋 Copiar al portapapeles';
+      }, 2500);
+    });
+  }
+</script>
+</body>
+</html>

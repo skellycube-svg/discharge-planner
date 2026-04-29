@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pickup at CVS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --sky: #e8f4fd;
+      --blue: #2c7be5;
+      --blue-dark: #1a5bb8;
+      --green: #27ae60;
+      --green-light: #eafaf1;
+      --yellow: #f39c12;
+      --yellow-light: #fef9e7;
+      --red: #e74c3c;
+      --red-light: #fdf2f2;
+      --text: #1a2332;
+      --muted: #6b7c93;
+      --white: #ffffff;
+      --card-shadow: 0 4px 20px rgba(44,123,229,0.10);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--sky);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+      color: white;
+      padding: 20px 20px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; left: 0; right: 0;
+      height: 40px;
+      background: var(--sky);
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+    }
+    .back-btn:hover { color: white; }
+
+    /* ── LANGUAGE TOGGLE ── */
+    .lang-toggle {
+      display: flex;
+      background: rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .lang-btn {
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 5px 14px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 0.5px;
+    }
+    .lang-btn.active {
+      background: white;
+      color: var(--blue-dark);
+    }
+
+    .header h1 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+    .header p { font-size: 13px; opacity: 0.8; }
+
+    /* ── MAIN ── */
+    .main { padding: 28px 16px 0; max-width: 480px; margin: 0 auto; }
+
+    .section-label {
+      font-family: 'Nunito', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+
+    /* ── SCRIPT CARD ── */
+    .script-card {
+      background: var(--blue-dark);
+      color: white;
+      border-radius: 18px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 24px rgba(26,91,184,0.25);
+    }
+    .script-card .label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.65;
+      margin-bottom: 10px;
+    }
+    .script-card .script-text {
+      font-size: 16px;
+      line-height: 1.6;
+      font-style: italic;
+      opacity: 0.95;
+    }
+    .script-card .script-text strong {
+      font-style: normal;
+      font-weight: 700;
+      opacity: 1;
+    }
+    .copy-btn {
+      margin-top: 14px;
+      background: rgba(255,255,255,0.15);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      color: white;
+      border-radius: 10px;
+      padding: 8px 16px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .copy-btn:hover { background: rgba(255,255,255,0.25); }
+    .copy-btn.copied { background: var(--green); border-color: var(--green); }
+
+    /* ── CHECKLIST ── */
+    .checklist { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+
+    .check-item {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: var(--card-shadow);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+      user-select: none;
+    }
+    .check-item.checked {
+      border-color: var(--green);
+      background: var(--green-light);
+    }
+    .check-item.checked .check-box {
+      background: var(--green);
+      border-color: var(--green);
+    }
+    .check-item.checked .check-box::after {
+      opacity: 1;
+    }
+    .check-item.checked .check-name {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    .check-box {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      border: 2.5px solid #d0dbe8;
+      background: white;
+      flex-shrink: 0;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .check-box::after {
+      content: '✓';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 15px;
+      font-weight: 900;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .check-icon {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .icon-rescue  { background: var(--red-light); }
+    .icon-daily   { background: #eef4fd; }
+    .icon-asneeded{ background: var(--yellow-light); }
+
+    .check-body { flex: 1; }
+    .check-name {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      margin-bottom: 2px;
+      transition: all 0.2s;
+    }
+    .check-sub { font-size: 12px; color: var(--muted); }
+
+    .refill-pill {
+      font-size: 11px;
+      font-weight: 700;
+      background: #eef4fd;
+      color: var(--blue);
+      padding: 3px 9px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap {
+      background: white;
+      border-radius: 14px;
+      padding: 14px 18px;
+      margin-bottom: 24px;
+      box-shadow: var(--card-shadow);
+    }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .progress-label span {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .progress-label .count { color: var(--blue); }
+    .progress-bar-bg {
+      background: #eef2f7;
+      border-radius: 10px;
+      height: 10px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), #2ecc71);
+      border-radius: 10px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+    .all-done-msg {
+      text-align: center;
+      margin-top: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      color: var(--green);
+      font-size: 14px;
+      display: none;
+    }
+
+    /* ── INSURANCE REMINDER ── */
+    .remind-card {
+      background: var(--yellow-light);
+      border: 1.5px solid #fde8a0;
+      border-radius: 16px;
+      padding: 14px 18px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+    .remind-card .remind-icon { font-size: 22px; flex-shrink: 0; }
+    .remind-card strong {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      display: block;
+      margin-bottom: 3px;
+      color: #7d5a00;
+    }
+    .remind-card p { font-size: 13px; color: #7d5a00; line-height: 1.5; }
+
+    /* ── CALL BUTTON ── */
+    .call-btn {
+      display: block;
+      background: white;
+      color: var(--blue);
+      text-align: center;
+      padding: 16px;
+      border-radius: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: var(--card-shadow);
+      border: 2px solid #d0e4f9;
+      margin-bottom: 12px;
+    }
+    .call-btn small {
+      display: block;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .home-btn {
+      display: block;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: white;
+      text-align: center;
+      padding: 16px;
+      border-radius: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(44,123,229,0.30);
+    }
+
+    /* ── ANIMATE ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .header  { animation: fadeUp 0.35s ease both; }
+    .main > * { animation: fadeUp 0.4s ease both; }
+
+    /* ── LANG HIDDEN ── */
+    [data-lang] { display: none; }
+    .lang-en [data-lang="en"] { display: block; }
+    .lang-en [data-lang="en"].inline { display: inline; }
+    .lang-es [data-lang="es"] { display: block; }
+    .lang-es [data-lang="es"].inline { display: inline; }
+  </style>
+</head>
+<body class="lang-en">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <a class="back-btn" href="/">‹ <span data-lang="en">Back to Home</span><span data-lang="es">Volver al Inicio</span></a>
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('es')">ES</button>
+      </div>
+    </div>
+    <h1>🏪 <span data-lang="en">Pick Up at CVS</span><span data-lang="es">Recoger en CVS</span></h1>
+    <p data-lang="en">CVS Pharmacy #16722 · All 3 prescriptions are ready</p>
+    <p data-lang="es">CVS Farmacia #16722 · Las 3 recetas están listas</p>
+  </div>
+
+  <div class="main">
+
+    <!-- WHAT TO SAY -->
+    <div class="section-label">
+      <span data-lang="en">What to say at the counter</span>
+      <span data-lang="es">Qué decir en el mostrador</span>
+    </div>
+
+    <div class="script-card">
+      <div class="label">
+        <span data-lang="en">📢 Say this</span>
+        <span data-lang="es">📢 Di esto</span>
+      </div>
+      <div class="script-text" id="scriptText">
+        <span data-lang="en">"I'm here to pick up for <strong>Chase Clements</strong>. There should be <strong>three prescriptions</strong> — Albuterol, Fluticasone, and Polyethylene Glycol."</span>
+        <span data-lang="es">"Vengo a recoger para <strong>Chase Clements</strong>. Deben ser <strong>tres recetas</strong> — Albuterol, Fluticasona y Polietilenglicol."</span>
+      </div>
+      <button class="copy-btn" id="copyBtn" onclick="copyScript()">
+        <span data-lang="en">📋 Copy to clipboard</span>
+        <span data-lang="es">📋 Copiar al portapapeles</span>
+      </button>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span data-lang="en">Prescriptions picked up</span>
+        <span data-lang="es">Recetas recogidas</span>
+        <span class="count" id="progressCount">0 / 3</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+      <div class="all-done-msg" id="allDoneMsg">
+        <span data-lang="en">🎉 All done! You're all set.</span>
+        <span data-lang="es">🎉 ¡Listo! Todo recogido.</span>
+      </div>
+    </div>
+
+    <!-- CHECKLIST -->
+    <div class="section-label">
+      <span data-lang="en">Tap each one as you pick it up</span>
+      <span data-lang="es">Toca cada una al recogerla</span>
+    </div>
+    <div class="checklist">
+
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-icon icon-rescue">🆘</div>
+        <div class="check-body">
+          <div class="check-name">
+            <span data-lang="en">Albuterol HFA Inhaler</span>
+            <span data-lang="es">Inhalador Albuterol HFA</span>
+          </div>
+          <div class="check-sub">
+            <span data-lang="en">The rescue inhaler · 2 puffs when wheezing</span>
+            <span data-lang="es">El inhalador de rescate · 2 puffs si silba el pecho</span>
+          </div>
+        </div>
+        <div class="refill-pill">
+          <span data-lang="en">3 refills</span>
+          <span data-lang="es">3 resurtidos</span>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-icon icon-daily">📅</div>
+        <div class="check-body">
+          <div class="check-name">
+            <span data-lang="en">Fluticasone Inhaler</span>
+            <span data-lang="es">Inhalador Fluticasona</span>
+          </div>
+          <div class="check-sub">
+            <span data-lang="en">Daily controller · 1 puff morning + night</span>
+            <span data-lang="es">Control diario · 1 puff mañana + noche</span>
+          </div>
+        </div>
+        <div class="refill-pill">
+          <span data-lang="en">2 refills</span>
+          <span data-lang="es">2 resurtidos</span>
+        </div>
+      </div>
+
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-icon icon-asneeded">💧</div>
+        <div class="check-body">
+          <div class="check-name">
+            <span data-lang="en">Polyethylene Glycol Powder</span>
+            <span data-lang="es">Polvo Polietilenglicol</span>
+          </div>
+          <div class="check-sub">
+            <span data-lang="en">For constipation · mix into any drink</span>
+            <span data-lang="es">Para estreñimiento · mezclar en cualquier bebida</span>
+          </div>
+        </div>
+        <div class="refill-pill">
+          <span data-lang="en">Available</span>
+          <span data-lang="es">Disponible</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- INSURANCE REMINDER -->
+    <div class="remind-card">
+      <div class="remind-icon">💳</div>
+      <div>
+        <strong>
+          <span data-lang="en">Before you get out of the car</span>
+          <span data-lang="es">Antes de salir del carro</span>
+        </strong>
+        <p>
+          <span data-lang="en">Do you have your insurance card? If there's a problem with coverage, ask the pharmacist to run it again or call CHOC at 1-888-770-2462.</span>
+          <span data-lang="es">¿Tienes tu tarjeta de seguro médico? Si hay un problema con la cobertura, pídele al farmacéutico que intente de nuevo o llama a CHOC al 1-888-770-2462.</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- CALL CVS -->
+    <div class="section-label">
+      <span data-lang="en">Need to call ahead?</span>
+      <span data-lang="es">¿Necesitas llamar antes?</span>
+    </div>
+    <a class="call-btn" href="tel:18887702462">
+      📞 <span data-lang="en">Call CHOC Scheduling</span><span data-lang="es">Llamar a CHOC</span>
+      <small>1-888-770-2462</small>
+    </a>
+
+    <a class="home-btn" href="/">
+      ‹ <span data-lang="en">Back to Today's Summary</span><span data-lang="es">Volver al Resumen de Hoy</span>
+    </a>
+
+  </div>
+
+  <script>
+  // ── LANGUAGE — loads saved preference on every page ──
+  (function() {
+    const saved = localStorage.getItem('lang') || 'en';
+    document.body.className = 'lang-' + saved;
+    // set active button if toggle exists on this page
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent === saved.toUpperCase());
+    });
+  })();
+
+  function setLang(lang) {
+    localStorage.setItem('lang', lang);          // remember it
+    document.body.className = 'lang-' + lang;    // apply it
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent === lang.toUpperCase());
+    });
+  }
+
+  // ── CHECKLIST (pickup.html only — safe to ignore on other pages) ──
+  function toggleCheck(item) {
+    item.classList.toggle('checked');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const total = document.querySelectorAll('.check-item').length;
+    const checked = document.querySelectorAll('.check-item.checked').length;
+    const pct = (checked / total) * 100;
+    const fill = document.getElementById('progressFill');
+    const count = document.getElementById('progressCount');
+    const done = document.getElementById('allDoneMsg');
+    if (fill) fill.style.width = pct + '%';
+    if (count) count.textContent = checked + ' / ' + total;
+    if (done) done.style.display = checked === total ? 'block' : 'none';
+  }
+
+  function copyScript() {
+    const lang = localStorage.getItem('lang') || 'en';
+    const scripts = {
+      en: "I'm here to pick up for Chase Clements. There should be three prescriptions — Albuterol, Fluticasone, and Polyethylene Glycol.",
+      es: "Vengo a recoger para Chase Clements. Deben ser tres recetas — Albuterol, Fluticasona y Polietilenglicol."
+    };
+    navigator.clipboard.writeText(scripts[lang]).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.classList.add('copied');
+      btn.querySelector('[data-lang="en"]').textContent = '✓ Copied!';
+      btn.querySelector('[data-lang="es"]').textContent = '✓ ¡Copiado!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.querySelector('[data-lang="en"]').textContent = '📋 Copy to clipboard';
+        btn.querySelector('[data-lang="es"]').textContent = '📋 Copiar al portapapeles';
+      }, 2500);
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Follow-Up Appointment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --sky: #e8f4fd;
+      --blue: #2c7be5;
+      --blue-dark: #1a5bb8;
+      --blue-light: #eef4fd;
+      --green: #27ae60;
+      --green-light: #eafaf1;
+      --yellow: #f39c12;
+      --yellow-light: #fef9e7;
+      --red: #e74c3c;
+      --red-light: #fdf2f2;
+      --purple: #8e44ad;
+      --purple-light: #f5eef8;
+      --text: #1a2332;
+      --muted: #6b7c93;
+      --white: #ffffff;
+      --card-shadow: 0 4px 20px rgba(44,123,229,0.10);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--sky);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+      color: white;
+      padding: 20px 20px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; left: 0; right: 0;
+      height: 40px;
+      background: var(--sky);
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+    }
+    .back-btn:hover { color: white; }
+    .lang-toggle {
+      display: flex;
+      background: rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .lang-btn {
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 5px 14px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .lang-btn.active { background: white; color: var(--blue-dark); }
+
+    .header h1 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+    .header p { font-size: 13px; opacity: 0.8; }
+
+    /* ── MAIN ── */
+    .main { padding: 28px 16px 0; max-width: 480px; margin: 0 auto; }
+
+    .section-label {
+      font-family: 'Nunito', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+
+    /* ── WHY CARD ── */
+    .why-card {
+      background: var(--purple-light);
+      border: 1.5px solid #d7bde2;
+      border-radius: 18px;
+      padding: 18px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .why-icon { font-size: 26px; flex-shrink: 0; margin-top: 2px; }
+    .why-body strong {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--purple);
+      display: block;
+      margin-bottom: 6px;
+    }
+    .why-body p { font-size: 14px; line-height: 1.6; color: #5b2c6f; }
+
+    /* ── DOCTOR CARD ── */
+    .doctor-card {
+      background: var(--white);
+      border-radius: 18px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+    .doctor-avatar {
+      width: 52px; height: 52px;
+      background: var(--blue-light);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+    .doctor-info strong {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 16px;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .doctor-info span { font-size: 13px; color: var(--muted); }
+
+    /* ── SCRIPT CARD ── */
+    .script-card {
+      background: var(--blue-dark);
+      color: white;
+      border-radius: 18px;
+      padding: 18px 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 24px rgba(26,91,184,0.25);
+    }
+    .script-card .label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.65;
+      margin-bottom: 10px;
+    }
+    .script-card .script-text {
+      font-size: 15px;
+      line-height: 1.65;
+      font-style: italic;
+      opacity: 0.95;
+    }
+    .script-card .script-text strong {
+      font-style: normal;
+      font-weight: 700;
+    }
+    .copy-btn {
+      margin-top: 14px;
+      background: rgba(255,255,255,0.15);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      color: white;
+      border-radius: 10px;
+      padding: 8px 16px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .copy-btn:hover { background: rgba(255,255,255,0.25); }
+    .copy-btn.copied { background: var(--green); border-color: var(--green); }
+
+    /* ── READY LIST ── */
+    .ready-card {
+      background: var(--white);
+      border-radius: 18px;
+      padding: 18px 20px;
+      margin-bottom: 24px;
+      box-shadow: var(--card-shadow);
+    }
+    .ready-card h3 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .ready-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px dashed #eef2f7;
+      cursor: pointer;
+      user-select: none;
+    }
+    .ready-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .ready-check {
+      width: 26px; height: 26px;
+      border-radius: 8px;
+      border: 2.5px solid #d0dbe8;
+      background: white;
+      flex-shrink: 0;
+      position: relative;
+      transition: all 0.2s;
+    }
+    .ready-check::after {
+      content: '✓';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 14px;
+      font-weight: 900;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .ready-item.checked .ready-check {
+      background: var(--green);
+      border-color: var(--green);
+    }
+    .ready-item.checked .ready-check::after { opacity: 1; }
+    .ready-item.checked .ready-text { text-decoration: line-through; color: var(--muted); }
+    .ready-emoji { font-size: 20px; }
+    .ready-text { font-size: 14px; font-weight: 600; transition: all 0.2s; }
+
+    /* ── CALL BUTTON ── */
+    .call-btn {
+      display: block;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: white;
+      text-align: center;
+      padding: 18px;
+      border-radius: 16px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 6px 24px rgba(44,123,229,0.35);
+      margin-bottom: 12px;
+      transition: transform 0.15s;
+      letter-spacing: 0.3px;
+    }
+    .call-btn:active { transform: scale(0.98); }
+    .call-btn small {
+      display: block;
+      font-size: 13px;
+      font-weight: 400;
+      opacity: 0.85;
+      margin-top: 3px;
+    }
+
+    /* ── APPOINTMENT SAVER ── */
+    .appt-card {
+      background: var(--white);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: var(--card-shadow);
+    }
+    .appt-card h3 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+    .appt-card p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .appt-fields { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+    .field-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .field-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid #e4eaf3;
+      border-radius: 12px;
+      font-family: 'Lato', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #f8fafd;
+      transition: border 0.2s;
+      appearance: none;
+    }
+    .field-input:focus {
+      outline: none;
+      border-color: var(--blue);
+      background: white;
+    }
+
+    .save-row { display: flex; gap: 10px; }
+    .cal-btn {
+      flex: 1;
+      background: var(--green-light);
+      border: 2px solid #a9dfbf;
+      color: var(--green);
+      padding: 12px;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .cal-btn:hover { background: #d5f5e3; }
+    .cal-btn.saved { background: var(--green); color: white; border-color: var(--green); }
+
+    .note-btn {
+      flex: 1;
+      background: var(--yellow-light);
+      border: 2px solid #fde8a0;
+      color: var(--yellow);
+      padding: 12px;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .note-btn:hover { background: #fdebc8; }
+
+    /* ── WHAT TO EXPECT ── */
+    .expect-card {
+      background: var(--green-light);
+      border: 1.5px solid #a9dfbf;
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 12px;
+    }
+    .expect-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .expect-body strong {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      color: #1e8449;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .expect-body p { font-size: 13px; color: #1e8449; line-height: 1.6; }
+
+    /* ── HOME BTN ── */
+    .home-btn {
+      display: block;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: white;
+      text-align: center;
+      padding: 16px;
+      border-radius: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(44,123,229,0.30);
+    }
+
+    /* ── ANIMATE ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .header { animation: fadeUp 0.35s ease both; }
+    .main > * { animation: fadeUp 0.4s ease both; }
+
+    /* ── LANG ── */
+    [data-lang] { display: none; }
+    .lang-en [data-lang="en"],
+    .lang-es [data-lang="es"] { display: block; }
+    .lang-en [data-lang="en"].inline,
+    .lang-es [data-lang="es"].inline { display: inline; }
+  </style>
+</head>
+<body class="lang-en">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <a class="back-btn" href="/">
+        ‹ <span data-lang="en">Back to Home</span><span data-lang="es">Volver al Inicio</span>
+      </a>
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('es')">ES</button>
+      </div>
+    </div>
+    <h1>📅 <span data-lang="en">Pulmonology Follow-Up</span><span data-lang="es">Seguimiento con Neumología</span></h1>
+    <p data-lang="en">Dr. Barry, MD · CHOC Children's Hospital</p>
+    <p data-lang="es">Dr. Barry, MD · Hospital CHOC Children's</p>
+  </div>
+
+  <div class="main">
+
+    <!-- WHY IT MATTERS -->
+    <div class="why-card">
+      <div class="why-icon">🫁</div>
+      <div class="why-body">
+        <strong><span data-lang="en">Why this appointment matters</span><span data-lang="es">Por qué importa esta cita</span></strong>
+        <p data-lang="en">After a hospital stay for asthma, a pulmonologist checks Chase's lungs and adjusts his treatment plan — helping keep him out of the hospital next time.</p>
+        <p data-lang="es">Después de una hospitalización por asma, el neumólogo revisa los pulmones de Chase y ajusta su plan de tratamiento — para evitar otra hospitalización.</p>
+      </div>
+    </div>
+
+    <!-- DOCTOR -->
+    <div class="section-label">
+      <span data-lang="en">Your doctor</span>
+      <span data-lang="es">Tu médico</span>
+    </div>
+    <div class="doctor-card">
+      <div class="doctor-avatar">👨‍⚕️</div>
+      <div class="doctor-info">
+        <strong>Dr. Barry, MD</strong>
+        <span data-lang="en">Consulting Pulmonologist · CHOC Children's</span>
+        <span data-lang="es">Neumólogo Consultor · CHOC Children's</span>
+      </div>
+    </div>
+
+    <!-- CALL BUTTON — above the script so it's the first thing she sees -->
+    <div class="section-label">
+      <span data-lang="en">Call to schedule</span>
+      <span data-lang="es">Llama para agendar</span>
+    </div>
+    <a class="call-btn" href="tel:18887702462">
+      📞 <span data-lang="en">Call CHOC Scheduling</span><span data-lang="es">Llamar a CHOC</span>
+      <small>1-888-770-2462</small>
+    </a>
+
+    <!-- WHAT TO HAVE READY -->
+    <div class="ready-card">
+      <h3>
+        <span data-lang="en">✅ Have this ready before you call</span>
+        <span data-lang="es">✅ Ten esto listo antes de llamar</span>
+      </h3>
+      <div class="ready-item" onclick="toggleReady(this)">
+        <div class="ready-check"></div>
+        <div class="ready-emoji">🪪</div>
+        <div class="ready-text">
+          <span data-lang="en">Chase's date of birth</span>
+          <span data-lang="es">Fecha de nacimiento de Chase</span>
+        </div>
+      </div>
+      <div class="ready-item" onclick="toggleReady(this)">
+        <div class="ready-check"></div>
+        <div class="ready-emoji">💳</div>
+        <div class="ready-text">
+          <span data-lang="en">Insurance card</span>
+          <span data-lang="es">Tarjeta de seguro médico</span>
+        </div>
+      </div>
+      <div class="ready-item" onclick="toggleReady(this)">
+        <div class="ready-check"></div>
+        <div class="ready-emoji">📆</div>
+        <div class="ready-text">
+          <span data-lang="en">2–3 dates and times that work for you</span>
+          <span data-lang="es">2–3 fechas y horarios que te convengan</span>
+        </div>
+      </div>
+      <div class="ready-item" onclick="toggleReady(this)">
+        <div class="ready-check"></div>
+        <div class="ready-emoji">💊</div>
+        <div class="ready-text">
+          <span data-lang="en">List of Chase's current medications</span>
+          <span data-lang="es">Lista de medicamentos actuales de Chase</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT TO SAY -->
+    <div class="section-label">
+      <span data-lang="en">What to say when they pick up</span>
+      <span data-lang="es">Qué decir cuando contesten</span>
+    </div>
+    <div class="script-card">
+      <div class="label">
+        <span data-lang="en">📢 Say this</span>
+        <span data-lang="es">📢 Di esto</span>
+      </div>
+      <div class="script-text">
+        <span data-lang="en">"Hi, I'm calling to schedule a <strong>pulmonology follow-up</strong> for my son <strong>Chase Clements, MRN 974388</strong>. He was discharged from CHOC on <strong>March 13th</strong> after an asthma exacerbation. His consulting doctor was <strong>Dr. Barry</strong>."</span>
+        <span data-lang="es">"Hola, llamo para agendar un <strong>seguimiento de neumología</strong> para mi hijo <strong>Chase Clements, MRN 974388</strong>. Le dieron de alta en CHOC el <strong>13 de marzo</strong> después de una exacerbación de asma. Su médico consultor fue el <strong>Dr. Barry</strong>."</span>
+      </div>
+      <button class="copy-btn" id="copyBtn" onclick="copyScript()">
+        <span data-lang="en">📋 Copy to clipboard</span>
+        <span data-lang="es">📋 Copiar al portapapeles</span>
+      </button>
+    </div>
+
+    <!-- APPOINTMENT SAVER -->
+    <div class="section-label">
+      <span data-lang="en">Save the appointment</span>
+      <span data-lang="es">Guardar la cita</span>
+    </div>
+    <div class="appt-card">
+      <h3>
+        <span data-lang="en">📝 Write it down as soon as they give you a date</span>
+        <span data-lang="es">📝 Anótalo en cuanto te den la fecha</span>
+      </h3>
+      <p data-lang="en">Don't rely on memory — save it here and add it to your calendar.</p>
+      <p data-lang="es">No dependas de la memoria — guárdalo aquí y agrégalo a tu calendario.</p>
+
+      <div class="appt-fields">
+        <div>
+          <div class="field-label">
+            <span data-lang="en">Date</span>
+            <span data-lang="es">Fecha</span>
+          </div>
+          <input type="date" class="field-input" id="apptDate"/>
+        </div>
+        <div>
+          <div class="field-label">
+            <span data-lang="en">Time</span>
+            <span data-lang="es">Hora</span>
+          </div>
+          <input type="time" class="field-input" id="apptTime"/>
+        </div>
+        <div>
+          <div class="field-label">
+            <span data-lang="en">Location / Notes</span>
+            <span data-lang="es">Lugar / Notas</span>
+          </div>
+          <input type="text" class="field-input" id="apptNotes"
+            placeholder="e.g. CHOC main campus, bring inhalers"/>
+        </div>
+      </div>
+
+      <div class="save-row">
+        <button class="cal-btn" id="calBtn" onclick="saveToCalendar()">
+          📅 <span data-lang="en">Add to Calendar</span><span data-lang="es">Agregar al Calendario</span>
+        </button>
+        <button class="note-btn" onclick="copyAppt()">
+          📋 <span data-lang="en">Copy details</span><span data-lang="es">Copiar detalles</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- WHAT TO EXPECT -->
+    <div class="expect-card">
+      <div class="expect-icon">💡</div>
+      <div class="expect-body">
+        <strong>
+          <span data-lang="en">What to expect at the visit</span>
+          <span data-lang="es">Qué esperar en la visita</span>
+        </strong>
+        <p data-lang="en">Bring both of Chase's inhalers. The doctor will check his breathing, review his medications, and may adjust his Fluticasone dose. It's a good time to ask any questions about his asthma triggers.</p>
+        <p data-lang="es">Lleva los dos inhaladores de Chase. El médico revisará su respiración, repasará sus medicamentos y puede ajustar la dosis de Fluticasona. Es un buen momento para preguntar sobre los desencadenantes del asma.</p>
+      </div>
+    </div>
+
+    <!-- HOME -->
+    <a class="home-btn" href="/">
+      ‹ <span data-lang="en">Back to Today's Summary</span><span data-lang="es">Volver al Resumen de Hoy</span>
+    </a>
+
+  </div>
+
+  <script>
+    // ── LANGUAGE — loads saved preference ──
+    (function() {
+      const saved = localStorage.getItem('lang') || 'en';
+      document.body.className = 'lang-' + saved;
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent === saved.toUpperCase());
+      });
+    })();
+
+    function setLang(lang) {
+      localStorage.setItem('lang', lang);
+      document.body.className = 'lang-' + lang;
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent === lang.toUpperCase());
+      });
+    }
+
+    // ── READY CHECKLIST ──
+    function toggleReady(item) {
+      item.classList.toggle('checked');
+    }
+
+    // ── COPY SCRIPT ──
+    function copyScript() {
+      const lang = localStorage.getItem('lang') || 'en';
+      const scripts = {
+        en: "Hi, I'm calling to schedule a pulmonology follow-up for my son Chase Clements, MRN 974388. He was discharged from CHOC on March 13th after an asthma exacerbation. His consulting doctor was Dr. Barry.",
+        es: "Hola, llamo para agendar un seguimiento de neumología para mi hijo Chase Clements, MRN 974388. Le dieron de alta en CHOC el 13 de marzo después de una exacerbación de asma. Su médico consultor fue el Dr. Barry."
+      };
+      navigator.clipboard.writeText(scripts[lang]).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.classList.add('copied');
+        btn.querySelector('[data-lang="en"]').textContent = '✓ Copied!';
+        btn.querySelector('[data-lang="es"]').textContent = '✓ ¡Copiado!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.querySelector('[data-lang="en"]').textContent = '📋 Copy to clipboard';
+          btn.querySelector('[data-lang="es"]').textContent = '📋 Copiar al portapapeles';
+        }, 2500);
+      });
+    }
+
+    // ── SAVE TO CALENDAR ──
+    function saveToCalendar() {
+      const date = document.getElementById('apptDate').value;
+      const time = document.getElementById('apptTime').value;
+      const notes = document.getElementById('apptNotes').value || 'CHOC Children\'s Hospital';
+
+      if (!date || !time) {
+        alert('Please enter a date and time first.');
+        return;
+      }
+
+      // build .ics calendar event
+      const start = date.replace(/-/g, '') + 'T' + time.replace(':', '') + '00';
+      // default 1hr appointment
+      const endHour = String(parseInt(time.split(':')[0]) + 1).padStart(2, '0');
+      const end = date.replace(/-/g, '') + 'T' + endHour + time.split(':')[1] + '00';
+
+      const ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'BEGIN:VEVENT',
+        'DTSTART:' + start,
+        'DTEND:' + end,
+        'SUMMARY:Chase - Pulmonology Follow-Up (Dr. Barry)',
+        'DESCRIPTION:CHOC Children\'s Hospital. Bring both inhalers. MRN: 974388. Call: 1-888-770-2462. ' + notes,
+        'LOCATION:CHOC Children\'s Hospital, 1201 West La Veta Avenue, Orange CA 92868',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\n');
+
+      const blob = new Blob([ics], { type: 'text/calendar' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'chase-pulmonology-followup.ics';
+      a.click();
+
+      const btn = document.getElementById('calBtn');
+      btn.classList.add('saved');
+      btn.querySelector('[data-lang="en"]').textContent = '✓ Saved!';
+      btn.querySelector('[data-lang="es"]').textContent = '✓ ¡Guardado!';
+      setTimeout(() => {
+        btn.classList.remove('saved');
+        btn.querySelector('[data-lang="en"]').textContent = '📅 Add to Calendar';
+        btn.querySelector('[data-lang="es"]').textContent = '📅 Agregar al Calendario';
+      }, 3000);
+    }
+
+    // ── COPY APPOINTMENT DETAILS ──
+    function copyAppt() {
+      const date = document.getElementById('apptDate').value || 'TBD';
+      const time = document.getElementById('apptTime').value || 'TBD';
+      const notes = document.getElementById('apptNotes').value || '';
+      const lang = localStorage.getItem('lang') || 'en';
+
+      const text = lang === 'es'
+        ? `Cita de Chase - Neumología\nFecha: ${date}\nHora: ${time}\n${notes}\nDr. Barry — CHOC: 1-888-770-2462`
+        : `Chase's Pulmonology Appointment\nDate: ${date}\nTime: ${time}\n${notes}\nDr. Barry — CHOC: 1-888-770-2462`;
+
+      navigator.clipboard.writeText(text);
+    }
+  </script>
+
+</body>
+</html>

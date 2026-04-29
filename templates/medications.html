@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chase's Medications</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --sky: #e8f4fd;
+      --blue: #2c7be5;
+      --blue-dark: #1a5bb8;
+      --green: #27ae60;
+      --green-light: #eafaf1;
+      --yellow: #f39c12;
+      --yellow-light: #fef9e7;
+      --red: #e74c3c;
+      --red-light: #fdf2f2;
+      --purple: #8e44ad;
+      --purple-light: #f5eef8;
+      --text: #1a2332;
+      --muted: #6b7c93;
+      --white: #ffffff;
+      --card-shadow: 0 4px 20px rgba(44,123,229,0.10);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--sky);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+      color: white;
+      padding: 20px 20px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; left: 0; right: 0;
+      height: 40px;
+      background: var(--sky);
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .back-btn:hover { color: white; }
+    .header h1 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+    .header p { font-size: 13px; opacity: 0.8; }
+
+    /* ── MAIN ── */
+    .main { padding: 28px 16px 0; max-width: 480px; margin: 0 auto; }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-family: 'Nunito', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+
+    /* ── MED CARD ── */
+    .med-card {
+      background: var(--white);
+      border-radius: 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+    }
+
+    .med-card-header {
+      padding: 18px 20px 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      border-bottom: 1px solid #f0f4f9;
+    }
+
+    .med-icon {
+      width: 50px; height: 50px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .rescue-icon  { background: var(--red-light); }
+    .daily-icon   { background: #eef4fd; }
+    .asneeded-icon{ background: var(--yellow-light); }
+
+    .med-title { flex: 1; }
+    .med-title h2 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 17px;
+      margin-bottom: 2px;
+    }
+    .med-title .nickname {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .med-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+      align-self: flex-start;
+    }
+    .badge-rescue   { background: var(--red-light);    color: var(--red); }
+    .badge-daily    { background: #eef4fd;              color: var(--blue); }
+    .badge-asneeded { background: var(--yellow-light);  color: var(--yellow); }
+
+    /* ── INFO ROWS ── */
+    .info-rows { padding: 14px 20px; border-bottom: 1px solid #f0f4f9; }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 6px 0;
+      font-size: 14px;
+    }
+    .info-row:not(:last-child) { border-bottom: 1px dashed #eef2f7; }
+    .info-label { color: var(--muted); font-size: 13px; }
+    .info-value { font-weight: 700; font-family: 'Nunito', sans-serif; text-align: right; max-width: 60%; }
+
+    /* ── STEPS ── */
+    .steps-section { padding: 16px 20px; }
+    .steps-title {
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .steps-wrapper { position: relative; }
+
+    .step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: fadeUp 0.4s ease forwards;
+    }
+    .step:nth-child(1)  { animation-delay: 0.05s; }
+    .step:nth-child(2)  { animation-delay: 0.10s; }
+    .step:nth-child(3)  { animation-delay: 0.15s; }
+    .step:nth-child(4)  { animation-delay: 0.20s; }
+    .step:nth-child(5)  { animation-delay: 0.25s; }
+    .step:nth-child(6)  { animation-delay: 0.30s; }
+    .step:nth-child(7)  { animation-delay: 0.35s; }
+    .step:nth-child(8)  { animation-delay: 0.40s; }
+    .step:nth-child(9)  { animation-delay: 0.45s; }
+
+    .step-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 13px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .step-text {
+      font-size: 14px;
+      line-height: 1.55;
+      padding-top: 4px;
+    }
+    .step-text strong { font-weight: 700; color: var(--blue-dark); }
+
+    /* ── TIP BOX ── */
+    .tip-box {
+      margin: 0 20px 18px;
+      background: var(--green-light);
+      border: 1.5px solid #a9dfbf;
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .tip-box .tip-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .tip-box p { font-size: 13px; line-height: 1.5; color: #1e8449; }
+
+    /* ── WARN BOX ── */
+    .warn-box {
+      margin: 0 20px 18px;
+      background: var(--red-light);
+      border: 1.5px solid #f5c6c6;
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .warn-box .warn-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .warn-box p { font-size: 13px; line-height: 1.5; color: #922b21; }
+
+    /* ── PHARMACY BOX ── */
+    .pharmacy-box {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 16px 18px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 28px;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+    .pharmacy-icon {
+      width: 44px; height: 44px;
+      background: #eef4fd;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .pharmacy-body strong {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .pharmacy-body span { font-size: 13px; color: var(--muted); }
+
+    /* ── BACK HOME BTN ── */
+    .home-btn {
+      display: block;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: white;
+      text-align: center;
+      padding: 16px;
+      border-radius: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(44,123,229,0.30);
+    }
+
+    /* ── ANIMATE ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .header        { animation: fadeUp 0.35s ease both; }
+    .main > *      { animation: fadeUp 0.4s ease both; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <a class="back-btn" href="/">‹ Back to Home</a>
+    <h1>💊 Chase's Medications</h1>
+    <p>3 medications — all picked up at CVS #16722</p>
+  </div>
+
+  <div class="main">
+
+    <!-- ══════════════════════════════════ -->
+    <!--  MED 1 — ALBUTEROL (RESCUE)       -->
+    <!-- ══════════════════════════════════ -->
+    <div class="section-label">Rescue Inhaler</div>
+    <div class="med-card">
+
+      <div class="med-card-header">
+        <div class="med-icon rescue-icon">🆘</div>
+        <div class="med-title">
+          <h2>Albuterol HFA</h2>
+          <div class="nickname">Use when Chase is wheezing or struggling to breathe</div>
+        </div>
+        <div class="med-badge badge-rescue">Rescue</div>
+      </div>
+
+      <div class="info-rows">
+        <div class="info-row">
+          <span class="info-label">Dose</span>
+          <span class="info-value">2 puffs</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">When</span>
+          <span class="info-value">Every 4–6 hrs if wheezing</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Refills</span>
+          <span class="info-value">3 refills available</span>
+        </div>
+      </div>
+
+      <div class="steps-section">
+        <div class="steps-title">How to use with spacer</div>
+        <div class="steps-wrapper">
+          <div class="step"><div class="step-num">1</div><div class="step-text">Remove the cap from the inhaler and spacer</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Shake well</strong> — 10 to 15 shakes</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-text">Attach the inhaler to the spacer</div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-text">Have Chase <strong>breathe out completely</strong> first</div></div>
+          <div class="step"><div class="step-num">5</div><div class="step-text">Put the spacer mouthpiece in Chase's mouth</div></div>
+          <div class="step"><div class="step-num">6</div><div class="step-text"><strong>Press down once</strong> to release the medicine</div></div>
+          <div class="step"><div class="step-num">7</div><div class="step-text">Chase breathes in <strong>slowly and deeply</strong></div></div>
+          <div class="step"><div class="step-num">8</div><div class="step-text">Hold breath for <strong>10 seconds</strong> (or as long as comfortable)</div></div>
+          <div class="step"><div class="step-num">9</div><div class="step-text">Wait <strong>1 minute</strong> before giving a second puff</div></div>
+        </div>
+      </div>
+
+      <div class="warn-box">
+        <div class="warn-icon">⚠️</div>
+        <p>If Chase needs this <strong>more than twice a week</strong>, call the doctor. This may mean his asthma isn't controlled.</p>
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════ -->
+    <!--  MED 2 — FLUTICASONE (DAILY)      -->
+    <!-- ══════════════════════════════════ -->
+    <div class="section-label" style="margin-top:8px;">Daily Controller Inhaler</div>
+    <div class="med-card">
+
+      <div class="med-card-header">
+        <div class="med-icon daily-icon">📅</div>
+        <div class="med-title">
+          <h2>Fluticasone 44 mcg</h2>
+          <div class="nickname">Prevents asthma — give every day, even when he feels fine</div>
+        </div>
+        <div class="med-badge badge-daily">Daily</div>
+      </div>
+
+      <div class="info-rows">
+        <div class="info-row">
+          <span class="info-label">Dose</span>
+          <span class="info-value">1 puff</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">When</span>
+          <span class="info-value">Morning + Night</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Refills</span>
+          <span class="info-value">2 refills available</span>
+        </div>
+      </div>
+
+      <div class="steps-section">
+        <div class="steps-title">How to use</div>
+        <div class="steps-wrapper">
+          <div class="step"><div class="step-num">1</div><div class="step-text">Remove cap, shake well</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text">Attach to spacer</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-text">Chase breathes out fully, then breathes in slowly after pressing</div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-text">Hold breath for <strong>10 seconds</strong></div></div>
+          <div class="step"><div class="step-num">5</div><div class="step-text"><strong>Rinse Chase's mouth with water</strong> right after — this prevents a mouth infection called thrush</div></div>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <div class="tip-icon">💡</div>
+        <p><strong>Don't skip days</strong> — Fluticasone works by building up in the body. It won't feel like it's doing anything, but it is!</p>
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════ -->
+    <!--  MED 3 — POLYETHYLENE GLYCOL      -->
+    <!-- ══════════════════════════════════ -->
+    <div class="section-label" style="margin-top:8px;">As Needed</div>
+    <div class="med-card">
+
+      <div class="med-card-header">
+        <div class="med-icon asneeded-icon">💧</div>
+        <div class="med-title">
+          <h2>Polyethylene Glycol</h2>
+          <div class="nickname">For constipation — only if Chase needs it</div>
+        </div>
+        <div class="med-badge badge-asneeded">As Needed</div>
+      </div>
+
+      <div class="info-rows">
+        <div class="info-row">
+          <span class="info-label">Dose</span>
+          <span class="info-value">As directed on pack</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">When</span>
+          <span class="info-value">Once daily if constipated</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">How</span>
+          <span class="info-value">Mix powder into a drink</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Refills</span>
+          <span class="info-value">Available at CVS</span>
+        </div>
+      </div>
+
+      <div class="tip-box" style="margin-top: 4px;">
+        <div class="tip-icon">💡</div>
+        <p>Mix into water, juice, or any drink Chase likes. It's tasteless and dissolves fully.</p>
+      </div>
+
+    </div>
+
+    <!-- PHARMACY REMINDER -->
+    <div class="section-label">Pickup reminder</div>
+    <div class="pharmacy-box">
+      <div class="pharmacy-icon">🏪</div>
+      <div class="pharmacy-body">
+        <strong>CVS Pharmacy #16722</strong>
+        <span>All 3 prescriptions are waiting · 3 refills on Albuterol · 2 on Fluticasone</span>
+      </div>
+    </div>
+
+    <!-- BACK HOME -->
+    <a class="home-btn" href="/">‹ Back to Today's Summary</a>
+
+  </div>
+<script>
+  // ── LANGUAGE — loads saved preference on every page ──
+  (function() {
+    const saved = localStorage.getItem('lang') || 'en';
+    document.body.className = 'lang-' + saved;
+    // set active button if toggle exists on this page
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent === saved.toUpperCase());
+    });
+  })();
+
+  function setLang(lang) {
+    localStorage.setItem('lang', lang);          // remember it
+    document.body.className = 'lang-' + lang;    // apply it
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent === lang.toUpperCase());
+    });
+  }
+
+  // ── CHECKLIST (pickup.html only — safe to ignore on other pages) ──
+  function toggleCheck(item) {
+    item.classList.toggle('checked');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const total = document.querySelectorAll('.check-item').length;
+    const checked = document.querySelectorAll('.check-item.checked').length;
+    const pct = (checked / total) * 100;
+    const fill = document.getElementById('progressFill');
+    const count = document.getElementById('progressCount');
+    const done = document.getElementById('allDoneMsg');
+    if (fill) fill.style.width = pct + '%';
+    if (count) count.textContent = checked + ' / ' + total;
+    if (done) done.style.display = checked === total ? 'block' : 'none';
+  }
+
+  function copyScript() {
+    const lang = localStorage.getItem('lang') || 'en';
+    const scripts = {
+      en: "I'm here to pick up for Chase Clements. There should be three prescriptions — Albuterol, Fluticasone, and Polyethylene Glycol.",
+      es: "Vengo a recoger para Chase Clements. Deben ser tres recetas — Albuterol, Fluticasona y Polietilenglicol."
+    };
+    navigator.clipboard.writeText(scripts[lang]).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.classList.add('copied');
+      btn.querySelector('[data-lang="en"]').textContent = '✓ Copied!';
+      btn.querySelector('[data-lang="es"]').textContent = '✓ ¡Copiado!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.querySelector('[data-lang="en"]').textContent = '📋 Copy to clipboard';
+        btn.querySelector('[data-lang="es"]').textContent = '📋 Copiar al portapapeles';
+      }, 2500);
+    });
+  }
+</script>
+</body>
+</html>
