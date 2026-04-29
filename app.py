@@ -18,5 +18,9 @@ def pickup():
 def followup():
     return render_template("followup.html")
 
+@app.route("/support")
+def support():
+    return render_template("support.html")
+
 if __name__ == "__main__":
     app.run(debug=True, port=5001)   # run the app locally

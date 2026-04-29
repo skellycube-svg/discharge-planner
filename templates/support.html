@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Community Support</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --sky: #e8f4fd; --blue: #2c7be5; --blue-dark: #1a5bb8; --blue-light: #eef4fd;
+      --green: #27ae60; --green-light: #eafaf1; --yellow: #f39c12; --yellow-light: #fef9e7;
+      --warm: #e67e22; --warm-light: #fef0e6; --teal: #16a085; --teal-light: #e8f8f5;
+      --rose: #c0392b; --rose-light: #fdedec; --text: #1a2332; --muted: #6b7c93;
+      --white: #ffffff; --card-shadow: 0 4px 20px rgba(44,123,229,0.10);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Lato', sans-serif; background: var(--sky); color: var(--text); min-height: 100vh; padding-bottom: 60px; }
+
+    .header { background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); color: white; padding: 20px 20px 36px; position: relative; overflow: hidden; }
+    .header::after { content: ''; position: absolute; bottom: -20px; left: 0; right: 0; height: 40px; background: var(--sky); border-radius: 50% 50% 0 0 / 100% 100% 0 0; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .back-btn { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 14px; font-family: 'Nunito', sans-serif; font-weight: 700; }
+    .lang-toggle { display: flex; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 3px; gap: 2px; }
+    .lang-btn { border: none; background: transparent; color: rgba(255,255,255,0.75); font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 13px; padding: 5px 14px; border-radius: 16px; cursor: pointer; transition: all 0.2s; }
+    .lang-btn.active { background: white; color: var(--warm); }
+    .header h1 { font-family: 'Nunito', sans-serif; font-size: 24px; font-weight: 900; margin-bottom: 4px; }
+    .header p { font-size: 13px; opacity: 0.85; }
+
+    .main { padding: 28px 16px 0; max-width: 480px; margin: 0 auto; }
+
+    .intro-card { background: var(--white); border-radius: 18px; padding: 20px; margin-bottom: 24px; box-shadow: var(--card-shadow); border-left: 5px solid var(--yellow); }
+    .intro-card h2 { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 16px; margin-bottom: 8px; color: var(--warm); }
+    .intro-card p { font-size: 13px; line-height: 1.65; color: var(--muted); }
+    .privacy-note { margin-top: 10px; display: flex; align-items: center; gap: 8px; background: var(--green-light); border-radius: 10px; padding: 8px 12px; font-size: 12px; color: var(--green); font-weight: 700; }
+
+    .screener { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+    .q-card { background: var(--white); border-radius: 18px; padding: 18px 20px; box-shadow: var(--card-shadow); opacity: 0; animation: fadeUp 0.4s ease forwards; }
+    .q-card:nth-child(1){animation-delay:.05s} .q-card:nth-child(2){animation-delay:.10s}
+    .q-card:nth-child(3){animation-delay:.15s} .q-card:nth-child(4){animation-delay:.20s}
+    .q-card:nth-child(5){animation-delay:.25s} .q-card:nth-child(6){animation-delay:.30s}
+    .q-card:nth-child(7){animation-delay:.35s}
+    .q-number { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--yellow); margin-bottom: 6px; }
+    .q-text { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 15px; margin-bottom: 14px; line-height: 1.4; }
+    .q-sub { font-size: 12px; color: var(--muted); margin-top: -10px; margin-bottom: 12px; line-height: 1.5; }
+
+    .field-input { width: 100%; padding: 12px 14px; border: 2px solid #e4eaf3; border-radius: 12px; font-family: 'Lato', sans-serif; font-size: 15px; color: var(--text); background: #f8fafd; transition: border 0.2s; }
+    .field-input:focus { outline: none; border-color: var(--yellow); background: white; }
+
+    .stepper { display: flex; align-items: center; border: 2px solid #e4eaf3; border-radius: 12px; overflow: hidden; width: fit-content; }
+    .stepper-btn { width: 44px; height: 44px; background: #f8fafd; border: none; font-size: 20px; font-weight: 700; color: var(--blue); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .stepper-btn:hover { background: #eef4fd; }
+    .stepper-val { width: 54px; text-align: center; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 20px; border-left: 2px solid #e4eaf3; border-right: 2px solid #e4eaf3; padding: 8px 0; }
+
+    .options { display: flex; flex-direction: column; gap: 8px; }
+    .options.row { flex-direction: row; flex-wrap: wrap; }
+    .option-pill { padding: 11px 16px; border: 2px solid #e4eaf3; border-radius: 12px; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.18s; background: #f8fafd; color: var(--text); text-align: left; display: flex; align-items: center; gap: 10px; user-select: none; }
+    .option-pill:hover { border-color: var(--yellow); background: var(--yellow-light); }
+    .option-pill.selected { border-color: var(--yellow); background: var(--yellow-light); color: var(--warm); }
+    .pill-emoji { font-size: 18px; }
+
+    .food-q { margin-bottom: 12px; }
+    .food-q-label { font-size: 13px; font-weight: 700; margin-bottom: 8px; line-height: 1.5; }
+    .yes-no { display: flex; gap: 8px; }
+    .yn-btn { flex: 1; padding: 10px; border: 2px solid #e4eaf3; border-radius: 12px; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 14px; cursor: pointer; background: #f8fafd; transition: all 0.18s; text-align: center; }
+    .yn-btn.selected-yes { border-color: var(--warm); background: var(--warm-light); color: var(--warm); }
+    .yn-btn.selected-no  { border-color: var(--green); background: var(--green-light); color: var(--green); }
+
+    .submit-btn { width: 100%; background: linear-gradient(135deg, var(--yellow), var(--warm)); color: white; border: none; padding: 18px; border-radius: 16px; font-family: 'Nunito', sans-serif; font-size: 17px; font-weight: 900; cursor: pointer; box-shadow: 0 6px 24px rgba(243,156,18,0.35); transition: transform 0.15s; margin-bottom: 28px; }
+    .submit-btn:active { transform: scale(0.98); }
+
+    /* ── RESULTS ── */
+    #results { display: none; }
+    .results-header { background: linear-gradient(135deg, var(--green), #2ecc71); border-radius: 18px; padding: 20px; color: white; margin-bottom: 20px; text-align: center; box-shadow: 0 6px 24px rgba(39,174,96,0.25); }
+    .results-header h2 { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 20px; margin-bottom: 4px; }
+    .results-header p { font-size: 13px; opacity: 0.9; }
+    .zip-badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; margin-top: 8px; }
+
+    .resource-group { margin-bottom: 20px; }
+    .resource-group-label { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; padding-left: 4px; }
+
+    /* ── THE KEY CARD ── */
+    .resource-card { background: var(--white); border-radius: 18px; margin-bottom: 12px; box-shadow: var(--card-shadow); overflow: hidden; border-left: 5px solid transparent; }
+    .resource-card.food     { border-left-color: var(--warm); }
+    .resource-card.financial{ border-left-color: var(--yellow); }
+    .resource-card.mental   { border-left-color: var(--blue); }
+    .resource-card.safety   { border-left-color: var(--rose); }
+    .resource-card.transport{ border-left-color: var(--teal); }
+    .resource-card.general  { border-left-color: var(--green); }
+
+    .card-top { padding: 14px 18px 12px; display: flex; gap: 12px; align-items: flex-start; }
+    .res-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .food     .res-icon { background: var(--warm-light); }
+    .financial .res-icon{ background: var(--yellow-light); }
+    .mental   .res-icon { background: var(--blue-light); }
+    .safety   .res-icon { background: var(--rose-light); }
+    .transport .res-icon{ background: var(--teal-light); }
+    .general  .res-icon { background: var(--green-light); }
+
+    .res-body { flex: 1; }
+    .res-name { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 15px; margin-bottom: 3px; }
+    .res-location { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .res-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* ── ONE TAP CALL ── */
+    .call-action { display: flex; border-top: 1px solid #f0f4f9; }
+    .call-action a { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 15px; text-decoration: none; transition: opacity 0.15s; }
+    .call-action a:hover { opacity: 0.85; }
+    .call-action .tap-call { color: white; }
+    .food      .tap-call { background: var(--warm); }
+    .financial .tap-call { background: var(--yellow); }
+    .mental    .tap-call { background: var(--blue); }
+    .safety    .tap-call { background: var(--rose); }
+    .transport .tap-call { background: var(--teal); }
+    .general   .tap-call { background: var(--green); }
+    .call-action .tap-web { color: var(--muted); border-left: 1px solid #f0f4f9; font-size: 13px; max-width: 72px; flex: 0 0 72px; }
+
+    .always-card { background: var(--blue-dark); border-radius: 18px; padding: 18px 20px; margin-bottom: 16px; color: white; display: flex; gap: 14px; align-items: center; }
+    .always-icon { font-size: 28px; flex-shrink: 0; }
+    .always-body strong { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 15px; display: block; margin-bottom: 3px; }
+    .always-body p { font-size: 13px; opacity: 0.85; }
+    .always-body a { color: #7ec8f5; font-weight: 700; text-decoration: none; }
+
+    .home-btn { display: block; background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; text-align: center; padding: 16px; border-radius: 14px; font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; text-decoration: none; box-shadow: 0 6px 20px rgba(44,123,229,0.30); margin-top: 8px; }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    .header { animation: fadeUp 0.35s ease both; }
+
+    [data-lang] { display: none; }
+    .lang-en [data-lang="en"], .lang-es [data-lang="es"] { display: block; }
+    .lang-en [data-lang="en"].inline, .lang-es [data-lang="es"].inline { display: inline; }
+  </style>
+</head>
+<body class="lang-en">
+
+  <div class="header">
+    <div class="header-top">
+      <a class="back-btn" href="/">‹ <span data-lang="en">Back to Home</span><span data-lang="es">Volver al Inicio</span></a>
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('es')">ES</button>
+      </div>
+    </div>
+    <h1>💛 <span data-lang="en">Community Support</span><span data-lang="es">Apoyo Comunitario</span></h1>
+    <p data-lang="en">One number. One call. Help near you.</p>
+    <p data-lang="es">Un número. Una llamada. Ayuda cerca de ti.</p>
+  </div>
+
+  <div class="main">
+    <div id="screenerSection">
+
+      <div class="intro-card">
+        <h2><span data-lang="en">A few quick questions</span><span data-lang="es">Unas preguntas rápidas</span></h2>
+        <p data-lang="en">We'll find the closest local contact for your family — one number, one tap to call.</p>
+        <p data-lang="es">Encontraremos el contacto local más cercano — un número, un toque para llamar.</p>
+        <div class="privacy-note">🔒 <span data-lang="en">Private — never shared with your doctor or insurance</span><span data-lang="es">Privado — nunca compartido con tu médico ni seguro</span></div>
+      </div>
+
+      <div class="screener">
+
+        <div class="q-card">
+          <div class="q-number"><span data-lang="en">Question 1 of 7</span><span data-lang="es">Pregunta 1 de 7</span></div>
+          <div class="q-text"><span data-lang="en">What is your zip code?</span><span data-lang="es">¿Cuál es tu código postal?</span></div>
+          <div class="q-sub"><span data-lang="en">Used to find the closest resource to you</span><span data-lang="es">Para encontrar el recurso más cercano</span></div>
+          <input type="text" class="field-input" id="zipcode" maxlength="5" placeholder="e.g. 92868" inputmode="numeric" oninput="answers.zip=this.value"/>
+        </div>
+
+        <div class="q-card">
+          <div class="q-number"><span data-lang="en">Question 2 of 7</span><span data-lang="es">Pregunta 2 de 7</span></div>
+          <div class="q-text"><span data-lang="en">How many people live in your household?</span><span data-lang="es">¿Cuántas personas viven en tu hogar?</span></div>
+          <div class="stepper">
+            <button class="stepper-btn" onclick="changeHousehold(-1)">−</button>
+            <div class="stepper-val" id="householdVal">3</div>
+            <button class="stepper-btn" onclick="changeHousehold(1)">+</button>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-number"><span data-lang="en">Question 3 of 7</span><span data-lang="es">Pregunta 3 de 7</span></div>
+          <div class="q-text"><span data-lang="en">Approximate monthly household income?</span><span data-lang="es">¿Ingreso mensual aproximado del hogar?</span></div>
+          <div class="q-sub"><span data-lang="en">Choose a range — no exact number needed</span><span data-lang="es">Elige un rango — no se necesita número exacto</span></div>
+          <div class="options">
+            <button class="option-pill" onclick="selectOption('income','under2k',this)"><span class="pill-emoji">💵</span><span data-lang="en">Under $2,000 / month</span><span data-lang="es">Menos de $2,000 / mes</span></button>
+            <button class="option-pill" onclick="selectOption('income','2k-4k',this)"><span class="pill-emoji">💵</span><span data-lang="en">$2,000 – $4,000 / month</span><span data-lang="es">$2,000 – $4,000 / mes</span></button>
+            <button class="option-pill" onclick="selectOption('income','4k-6k',this)"><span class="pill-emoji">💵</span><span data-lang="en">$4,000 – $6,000 / month</span><span data-lang="es">$4,000 – $6,000 / mes</span></button>
+            <button class="option-pill" onclick="selectOption('income','over6k',this)"><span class="pill-emoji">💵</span><span data-lang="en">Over $6,000 / month</span><span data-lang="es">Más de $6,000 / mes</span></button>
+            <button class="option-pill" onclick="selectOption('income','prefer-not',this)"><span class="pill-emoji">🤐</span><span data-lang="en">Prefer not to say</span><span data-lang="es">Prefiero no decir</span></button>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-number"><span data-lang="en">Question 4 of 7</span><span data-lang="es">Pregunta 4 de 7</span></div>
+          <div class="q-text"><span data-lang="en">Food for your family — in the last month...</span><span data-lang="es">Comida para tu familia — en el último mes...</span></div>
+          <div class="food-q">
+            <div class="food-q-label"><span data-lang="en">"We worried our food would run out before we had money for more."</span><span data-lang="es">"Nos preocupó que la comida se acabara antes de tener dinero para más."</span></div>
+            <div class="yes-no">
+              <button class="yn-btn" id="food1yes" onclick="selectFood(1,'yes')"><span data-lang="en">Often / Sometimes</span><span data-lang="es">Frecuente / A veces</span></button>
+              <button class="yn-btn" id="food1no"  onclick="selectFood(1,'no')"><span data-lang="en">Not true</span><span data-lang="es">No es cierto</span></button>
+            </div>
+          </div>
+          <div class="food-q">
+            <div class="food-q-label"><span data-lang="en">"The food we bought didn't last and we had no money for more."</span><span data-lang="es">"La comida que compramos no alcanzó y no tuvimos dinero para más."</span></div>
+            <div class="yes-no">
+              <button class="yn-btn" id="food2yes" onclick="selectFood(2,'yes')"><span data-lang="en">Often / Sometimes</span><span data-lang="es">Frecuente / A veces</span></button>
+              <button class="yn-btn" id="food2no"  onclick="selectFood(2,'no')"><span data-lang="en">Not true</span><span data-lang="es">No es cierto</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-number"><span data-lang="en">Question 5 of 7</span><span data-lang="es">Pregunta 5 de 7</span></div>
+          <div class="q-text"><span data-lang="en">How stressed have you been feeling lately?</span><span data-lang="es">¿Qué tan estresada/o te has sentido últimamente?</span></div>
+          <div class="options row">
+            <button class="option-pill" onclick="selectOption('stress','low',this)"><span class="pill-emoji">😌</span><span data-lang="en">Managing okay</span><span data-lang="es">Bien manejado</span></button>
+            <button class="option-pill" onclick="selectOption('stress','medium',this)"><span class="pill-emoji">😐</span><span data-lang="en">A bit stressed</span><span data-lang="es">Un poco estresada/o</span></button>
+            <button class="option-pill" onclick="selectOption('stress','high',this)"><span class="pill-emoji">😟</span><span data-lang="en">Very stressed</span><span data-lang="es">Muy estresada/o</span></button>
+            <button class="option-pill" onclick="selectOption('stress','overwhelmed',this)"><span class="pill-emoji">😰</span><span data-lang="en">Overwhelmed</span><span data-lang="es">Agobiada/o</span></button>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-number"><span data-lang="en">Question 6 of 7</span><span data-lang="es">Pregunta 6 de 7</span></div>
+          <div class="q-text"><span data-lang="en">How safe do you feel at home?</span><span data-lang="es">¿Qué tan segura/o te sientes en casa?</span></div>
+          <div class="q-sub"><span data-lang="en">Your answer is completely private</span><span data-lang="es">Tu respuesta es completamente privada</span></div>
+          <div class="options">
+            <button class="option-pill" onclick="selectOption('safety','always',this)"><span class="pill-emoji">😊</span><span data-lang="en">Always — I feel safe</span><span data-lang="es">Siempre — me siento segura/o</span></button>
+            <button class="option-pill" onclick="selectOption('safety','usually',this)"><span class="pill-emoji">🙂</span><span data-lang="en">Usually</span><span data-lang="es">Generalmente</span></button>
+            <button class="option-pill" onclick="selectOption('safety','sometimes',this)"><span class="pill-emoji">😐</span><span data-lang="en">Sometimes</span><span data-lang="es">A veces</span></button>
+            <button class="option-pill" onclick="selectOption('safety','rarely',this)"><span class="pill-emoji">😟</span><span data-lang="en">Rarely</span><span data-lang="es">Pocas veces</span></button>
+            <button class="option-pill" onclick="selectOption('safety','no',this)"><span class="pill-emoji">🆘</span><span data-lang="en">No — I don't feel safe</span><span data-lang="es">No — no me siento segura/o</span></button>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-number"><span data-lang="en">Question 7 of 7</span><span data-lang="es">Pregunta 7 de 7</span></div>
+          <div class="q-text"><span data-lang="en">Do you need help getting to medical appointments?</span><span data-lang="es">¿Necesitas ayuda para llegar a citas médicas?</span></div>
+          <div class="options">
+            <button class="option-pill" onclick="selectOption('transport','no',this)"><span class="pill-emoji">🚗</span><span data-lang="en">No — I have reliable transport</span><span data-lang="es">No — tengo transporte confiable</span></button>
+            <button class="option-pill" onclick="selectOption('transport','sometimes',this)"><span class="pill-emoji">🚌</span><span data-lang="en">Sometimes it's difficult</span><span data-lang="es">A veces es difícil</span></button>
+            <button class="option-pill" onclick="selectOption('transport','yes',this)"><span class="pill-emoji">🙏</span><span data-lang="en">Yes — I need help</span><span data-lang="es">Sí — necesito ayuda</span></button>
+          </div>
+        </div>
+
+      </div>
+
+      <button class="submit-btn" onclick="showResults()">
+        <span data-lang="en">Find My Nearest Contact →</span>
+        <span data-lang="es">Encontrar Mi Contacto Más Cercano →</span>
+      </button>
+
+    </div>
+
+    <!-- RESULTS -->
+    <div id="results">
+      <div class="results-header">
+        <h2><span data-lang="en">💛 Your local contacts</span><span data-lang="es">💛 Tus contactos locales</span></h2>
+        <p data-lang="en">One number per resource. Tap to call.</p>
+        <p data-lang="es">Un número por recurso. Toca para llamar.</p>
+        <div class="zip-badge" id="zipBadge"></div>
+      </div>
+
+      <div class="always-card">
+        <div class="always-icon">🏥</div>
+        <div class="always-body">
+          <strong><span data-lang="en">CHOC Social Work Team</span><span data-lang="es">Trabajo Social de CHOC</span></strong>
+          <p data-lang="en">Free help for any family need. <a href="tel:17144048100">714-404-8100</a></p>
+          <p data-lang="es">Ayuda gratuita para cualquier necesidad. <a href="tel:17144048100">714-404-8100</a></p>
+        </div>
+      </div>
+
+      <div id="dynamicResources"></div>
+
+      <a class="home-btn" href="/">‹ <span data-lang="en">Back to Today's Summary</span><span data-lang="es">Volver al Resumen de Hoy</span></a>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const s = localStorage.getItem('lang')||'en';
+      document.body.className='lang-'+s;
+      document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent===s.toUpperCase()));
+    })();
+
+    function setLang(l){
+      localStorage.setItem('lang',l);
+      document.body.className='lang-'+l;
+      document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent===l.toUpperCase()));
+    }
+
+    const answers={zip:'',household:3,income:null,food1:null,food2:null,stress:null,safety:null,transport:null};
+
+    function changeHousehold(d){
+      answers.household=Math.max(1,Math.min(12,answers.household+d));
+      document.getElementById('householdVal').textContent=answers.household>=12?'12+':answers.household;
+    }
+    function selectOption(f,v,el){
+      answers[f]=v;
+      el.parentElement.querySelectorAll('.option-pill').forEach(p=>p.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+    function selectFood(q,v){
+      answers['food'+q]=v;
+      document.getElementById('food'+q+'yes').className='yn-btn'+(v==='yes'?' selected-yes':'');
+      document.getElementById('food'+q+'no').className ='yn-btn'+(v==='no' ?' selected-no' :'');
+    }
+
+    // zip → area
+    function getArea(zip){
+      const z=(zip||'').trim().substring(0,5);
+      const north=['92801','92802','92803','92804','92805','92806','92807','92808','92831','92832','92833','92834','92835','92836','92837','92838','92821','92823','92870','92886','92887'];
+      const central=['92861','92862','92863','92864','92865','92866','92867','92868','92869','92701','92702','92703','92704','92705','92706','92707','92708','92840','92841','92842','92843','92844','92845','92846','92683','92684','92685'];
+      const south=['92602','92603','92604','92606','92612','92614','92618','92620','92630','92637','92651','92652','92653','92654','92656','92657','92660','92661','92662','92663','92672','92673','92674','92675','92676','92677','92678','92679','92688','92691','92692','92694','92697','92698'];
+      if(north.includes(z)) return 'north';
+      if(central.includes(z)) return 'central';
+      if(south.includes(z)) return 'south';
+      return 'oc';
+    }
+
+    // resource database — one location per area, real verified OC numbers
+    const DB={
+      food:{
+        north:{name_en:'Pathways of Hope — Fullerton',name_es:'Pathways of Hope — Fullerton',loc_en:'611 S. Ford Ave, Fullerton',loc_es:'611 S. Ford Ave, Fullerton',desc_en:'Free food pantry Mon–Fri 1–4pm. No appointment needed.',desc_es:'Despensa gratuita lun–vie 1–4pm. Sin cita.',phone:'7146803691',ph:'714-680-3691',web:'https://www.pathwaysofhope.us',icon:'🥦',type:'food'},
+        central:{name_en:'Catholic Charities OC — Santa Ana',name_es:'Caridades Católicas — Santa Ana',loc_en:'3631 W. Warner Ave, Santa Ana',loc_es:'3631 W. Warner Ave, Santa Ana',desc_en:'Free food distribution Tue, Wed & Fri 7:30am–12pm. No paperwork.',desc_es:'Distribución gratuita mar, mié y vie 7:30am–12pm. Sin papeleo.',phone:'7146681130',ph:'714-668-1130',web:'https://www.catholiccharitiesoc.org',icon:'🥦',type:'food'},
+        south:{name_en:'Share Our Selves (SOS) — Costa Mesa',name_es:'Share Our Selves (SOS) — Costa Mesa',loc_en:'1550 Superior Ave, Costa Mesa',loc_es:'1550 Superior Ave, Costa Mesa',desc_en:'Free food bags Mon–Fri 8am–5pm. Also emergency funds & clothing.',desc_es:'Bolsas de comida gratis lun–vie 8am–5pm. También fondos de emergencia.',phone:'9496423451',ph:'949-642-3451',web:'https://www.shareourselves.org',icon:'🥦',type:'food'},
+        oc:{name_en:'Second Harvest Food Bank OC',name_es:'Banco de Alimentos Second Harvest OC',loc_en:'8014 Marine Way, Irvine · county-wide network',loc_es:'8014 Marine Way, Irvine · red en todo el condado',desc_en:'Call to find your nearest pantry — 300+ locations across OC.',desc_es:'Llama para encontrar tu despensa más cercana — más de 300 ubicaciones.',phone:'9496532900',ph:'949-653-2900',web:'https://feedoc.org',icon:'🥦',type:'food'}
+      },
+      financial:{
+        north:{name_en:'211 OC — Dial or text 211',name_es:'211 OC — Marca o envía mensaje al 211',loc_en:'Covers all of North OC · available 24/7',loc_es:'Cubre todo el norte del condado · disponible 24/7',desc_en:'Free referrals for rent, utilities, childcare & emergency funds. English & Spanish.',desc_es:'Referencias gratuitas para renta, servicios, cuidado infantil y emergencias.',phone:'211',ph:'211',web:'https://211oc.org',icon:'📞',type:'financial'},
+        central:{name_en:'211 OC — Dial or text 211',name_es:'211 OC — Marca o envía mensaje al 211',loc_en:'Covers all of Central OC · available 24/7',loc_es:'Cubre todo el centro del condado · disponible 24/7',desc_en:'Free referrals for rent, utilities, childcare & emergency funds. English & Spanish.',desc_es:'Referencias gratuitas para renta, servicios, cuidado infantil y emergencias.',phone:'211',ph:'211',web:'https://211oc.org',icon:'📞',type:'financial'},
+        south:{name_en:'211 OC — Dial or text 211',name_es:'211 OC — Marca o envía mensaje al 211',loc_en:'Covers all of South OC · available 24/7',loc_es:'Cubre todo el sur del condado · disponible 24/7',desc_en:'Free referrals for rent, utilities, childcare & emergency funds. English & Spanish.',desc_es:'Referencias gratuitas para renta, servicios, cuidado infantil y emergencias.',phone:'211',ph:'211',web:'https://211oc.org',icon:'📞',type:'financial'},
+        oc:{name_en:'211 Orange County',name_es:'211 Condado de Orange',loc_en:'All of Orange County · 24 hours a day, 7 days a week',loc_es:'Todo el Condado de Orange · 24 horas, 7 días',desc_en:'Free referrals for rent, utilities, childcare & emergency funds. English & Spanish.',desc_es:'Referencias gratuitas para renta, servicios y emergencias.',phone:'211',ph:'211',web:'https://211oc.org',icon:'📞',type:'financial'}
+      },
+      mental:{
+        north:{name_en:'CHOC Mental Health — Anaheim Hills',name_es:'Salud Mental CHOC — Anaheim Hills',loc_en:'Phone support · referrals for North OC families',loc_es:'Apoyo telefónico · referencias para familias del norte',desc_en:'Free support for caregivers managing stress after a child\'s hospital stay.',desc_es:'Apoyo gratuito para cuidadores que manejan el estrés post-hospitalización.',phone:'17145098000',ph:'714-509-8000',web:'https://www.choc.org/mental-health',icon:'🧠',type:'mental'},
+        central:{name_en:'CHOC Mental Health — Orange',name_es:'Salud Mental CHOC — Orange',loc_en:'1201 W. La Veta Ave, Orange',loc_es:'1201 W. La Veta Ave, Orange',desc_en:'Free caregiver mental health support after a child\'s hospitalization.',desc_es:'Apoyo gratuito para cuidadores después de la hospitalización de un hijo.',phone:'17145098000',ph:'714-509-8000',web:'https://www.choc.org/mental-health',icon:'🧠',type:'mental'},
+        south:{name_en:'South County Outreach — Irvine',name_es:'South County Outreach — Irvine',loc_en:'7 Whatney, Ste. B, Irvine',loc_es:'7 Whatney, Ste. B, Irvine',desc_en:'Mental health referrals and social support for South OC families.',desc_es:'Referencias de salud mental y apoyo social para familias del sur del condado.',phone:'9493808144',ph:'949-380-8144',web:'https://www.sco-oc.org',icon:'🧠',type:'mental'},
+        oc:{name_en:'NAMI OC Helpline',name_es:'Línea de Ayuda NAMI OC',loc_en:'Phone support · English & Spanish · 24/7',loc_es:'Apoyo telefónico · Inglés y Español · 24/7',desc_en:'Free mental health support and referrals for parents and caregivers.',desc_es:'Apoyo gratuito de salud mental y referencias para padres.',phone:'18002738255',ph:'1-800-273-8255',web:'https://www.nami.org',icon:'🧠',type:'mental'}
+      },
+      safety:{
+        north:{name_en:'Interval House — Anaheim · 24hr hotline',name_es:'Interval House — Anaheim · Línea 24 horas',loc_en:'Anaheim · Confidential · Free',loc_es:'Anaheim · Confidencial · Gratuito',desc_en:'Free emergency shelter, counseling and legal help for North OC. Available 24/7.',desc_es:'Refugio de emergencia, consejería y ayuda legal para el norte del condado. 24/7.',phone:'7148918121',ph:'714-891-8121',web:'https://www.intervalhouse.org',icon:'🆘',type:'safety'},
+        central:{name_en:'Human Options — 24hr Hotline',name_es:'Human Options — Línea 24 horas',loc_en:'Serves all of Orange County · Confidential',loc_es:'Sirve a todo el condado · Confidencial',desc_en:'Free 24/7 shelter, counseling and legal help. English & Spanish.',desc_es:'Refugio, consejería y ayuda legal gratuitos 24/7. Inglés y español.',phone:'9498543554',ph:'949-854-3554',web:'https://humanoptions.org',icon:'🆘',type:'safety'},
+        south:{name_en:"Laura's House — 24hr Hotline",name_es:"Laura's House — Línea 24 horas",loc_en:'33 Journey, Suite 150, Aliso Viejo',loc_es:'33 Journey, Suite 150, Aliso Viejo',desc_en:'Free 24/7 shelter, counseling and legal advocacy for South OC.',desc_es:'Refugio, consejería y apoyo legal gratuitos 24/7 para el sur del condado.',phone:'8664981511',ph:'866-498-1511',web:'https://laurashouse.org',icon:'🆘',type:'safety'},
+        oc:{name_en:'National DV Hotline',name_es:'Línea Nacional — Violencia Doméstica',loc_en:'Free · Confidential · 24/7 · Any language',loc_es:'Gratis · Confidencial · 24/7 · Cualquier idioma',desc_en:'Call, text START to 88788, or chat at thehotline.org. You are not alone.',desc_es:'Llama, envía START al 88788 o chatea en thehotline.org. No estás sola/o.',phone:'18007997233',ph:'1-800-799-7233',web:'https://www.thehotline.org',icon:'🆘',type:'safety'}
+      },
+      transport:{
+        north:{name_en:'OCTA OC ACCESS — North OC Reservations',name_es:'OCTA OC ACCESS — Reservaciones Norte',loc_en:'Covers Anaheim, Fullerton & North OC cities',loc_es:'Cubre Anaheim, Fullerton y ciudades del norte',desc_en:'Low-cost medical rides. $3.60 base. Call at least 1 day ahead to book.',desc_es:'Viajes médicos de bajo costo. $3.60 base. Llama con al menos 1 día de anticipación.',phone:'8776282232',ph:'877-628-2232',web:'https://www.octa.net/getting-around/bus/oc-access/overview',icon:'🚗',type:'transport'},
+        central:{name_en:'CHOC Transport Assistance — Orange',name_es:'Asistencia de Transporte CHOC — Orange',loc_en:'1201 W. La Veta Ave, Orange',loc_es:'1201 W. La Veta Ave, Orange',desc_en:'CHOC social work connects families to free or low-cost rides to appointments.',desc_es:'Trabajo social de CHOC conecta familias con viajes gratuitos o de bajo costo.',phone:'17144048100',ph:'714-404-8100',web:'https://www.choc.org',icon:'🚗',type:'transport'},
+        south:{name_en:'OCTA OC ACCESS — South OC Reservations',name_es:'OCTA OC ACCESS — Reservaciones Sur',loc_en:'Covers Irvine, Mission Viejo & South OC cities',loc_es:'Cubre Irvine, Mission Viejo y ciudades del sur',desc_en:'Low-cost medical rides. $3.60 base. Call at least 1 day ahead to book.',desc_es:'Viajes médicos de bajo costo. $3.60 base. Llama con al menos 1 día de anticipación.',phone:'8776282232',ph:'877-628-2232',web:'https://www.octa.net/getting-around/bus/oc-access/overview',icon:'🚗',type:'transport'},
+        oc:{name_en:'OCTA OC ACCESS',name_es:'OCTA OC ACCESS',loc_en:'All of Orange County · Book 1–3 days ahead',loc_es:'Todo el condado · Reserva con 1–3 días de anticipación',desc_en:'Low-cost medical rides. $3.60 base. Call at least 1 day ahead to book.',desc_es:'Viajes médicos de bajo costo. $3.60 base.',phone:'8776282232',ph:'877-628-2232',web:'https://www.octa.net/getting-around/bus/oc-access/overview',icon:'🚗',type:'transport'}
+      }
+    };
+
+    function buildCard(r){
+      const l=localStorage.getItem('lang')||'en';
+      const name=l==='es'?r.name_es:r.name_en;
+      const loc =l==='es'?r.loc_es :r.loc_en;
+      const desc=l==='es'?r.desc_es:r.desc_en;
+      const callLbl=l==='es'?'Llamar':'Call';
+      const webLbl =l==='es'?'Web':'Web';
+      return `<div class="resource-card ${r.type}">
+        <div class="card-top">
+          <div class="res-icon">${r.icon}</div>
+          <div class="res-body">
+            <div class="res-name">${name}</div>
+            <div class="res-location">📍 ${loc}</div>
+            <div class="res-desc">${desc}</div>
+          </div>
+        </div>
+        <div class="call-action">
+          <a href="tel:${r.phone}" class="tap-call">📞 ${callLbl} ${r.ph}</a>
+          <a href="${r.web}" target="_blank" class="tap-web">🌐 ${webLbl}</a>
+        </div>
+      </div>`;
+    }
+
+    function buildGroup(enLabel,esLabel,color,card){
+      const l=localStorage.getItem('lang')||'en';
+      return `<div class="resource-group"><div class="resource-group-label" style="color:${color}">${l==='es'?esLabel:enLabel}</div>${buildCard(card)}</div>`;
+    }
+
+    function showResults(){
+      const l=localStorage.getItem('lang')||'en';
+      const a=answers;
+      const area=getArea(a.zip);
+      let html='';
+
+      const foodInsecure=a.food1==='yes'||a.food2==='yes';
+      const lowIncome=a.income==='under2k'||a.income==='2k-4k';
+
+      if(foodInsecure||lowIncome){
+        html+=buildGroup('🍎 Food Support','🍎 Apoyo Alimentario','var(--warm)',DB.food[area]);
+        html+=buildGroup('💰 Financial Help','💰 Ayuda Financiera','var(--yellow)',DB.financial[area]);
+      } else if(a.income==='prefer-not'){
+        html+=buildGroup('💰 Financial Help','💰 Ayuda Financiera','var(--yellow)',DB.financial[area]);
+      }
+
+      if(a.stress==='high'||a.stress==='overwhelmed'){
+        html+=buildGroup('🧠 Mental Health','🧠 Salud Mental','var(--blue)',DB.mental[area]);
+      }
+      if(a.safety==='sometimes'||a.safety==='rarely'||a.safety==='no'){
+        html+=buildGroup('🆘 Safety Support','🆘 Apoyo de Seguridad','var(--rose)',DB.safety[area]);
+      }
+      if(a.transport==='yes'||a.transport==='sometimes'){
+        html+=buildGroup('🚗 Transport Help','🚗 Ayuda con Transporte','var(--teal)',DB.transport[area]);
+      }
+      if(!html){
+        html=buildGroup('📞 General Support','📞 Apoyo General','var(--green)',DB.financial[area]);
+      }
+
+      const areaLabel={north:{en:'North OC',es:'Norte del Condado'},central:{en:'Central OC',es:'Centro del Condado'},south:{en:'South OC',es:'Sur del Condado'},oc:{en:'Orange County',es:'Condado de Orange'}};
+      const badge=areaLabel[area][l];
+      document.getElementById('zipBadge').textContent=a.zip?`📍 ${a.zip} · ${badge}`:`📍 ${badge}`;
+      document.getElementById('dynamicResources').innerHTML=html;
+      document.getElementById('screenerSection').style.display='none';
+      document.getElementById('results').style.display='block';
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+  </script>
+</body>
+</html>
