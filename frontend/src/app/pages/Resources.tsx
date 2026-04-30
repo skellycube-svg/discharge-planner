@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Link } from 'react-router';
 import {
   Phone,
   ExternalLink,
@@ -14,11 +15,14 @@ import {
   Languages,
   Baby,
   Accessibility,
+  Wand2,
+  ChevronRight,
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { usePatient } from '../context/PatientContext';
 import { recommendedFor, programsByCategory, scoreProgramFor } from '../data/programs';
 import type { Program, ProgramCategory, ProgramScore } from '../data/types';
+import { PERSONALIZE_KEY, type PersonalizeAnswers } from './PersonalizeQuiz';
 
 type TabKey = 'recommended' | ProgramCategory;
 
@@ -33,6 +37,16 @@ export function Resources() {
   const { lang } = useLanguage();
   const { patient } = usePatient();
   const [tab, setTab] = useState<TabKey>('recommended');
+  const [answers, setAnswers] = useState<PersonalizeAnswers | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(PERSONALIZE_KEY);
+      if (raw) setAnswers(JSON.parse(raw));
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   if (!patient) return null;
 
@@ -61,6 +75,12 @@ export function Resources() {
       slots: 'spots open',
       wait: 'day wait',
       waitMany: 'days wait',
+      personalize: 'Personalize results',
+      personalizeSub: 'Answer 5 quick questions',
+      personalized: 'Personalized for you',
+      retake: 'Update answers',
+      getRide: 'Get a ride',
+      getRideSub: 'Free or low-cost transportation to appointments',
     },
     es: {
       title: 'Ayuda y Servicios',
@@ -86,10 +106,32 @@ export function Resources() {
       slots: 'lugares',
       wait: 'día de espera',
       waitMany: 'días de espera',
+      personalize: 'Personalizar resultados',
+      personalizeSub: 'Responde 5 preguntas rápidas',
+      personalized: 'Personalizado para ti',
+      retake: 'Actualizar respuestas',
+      getRide: 'Conseguir transporte',
+      getRideSub: 'Viajes gratis o de bajo costo a las citas',
     },
   }[lang];
 
-  const recommended = useMemo(() => recommendedFor(patient, 6), [patient]);
+  const recommended = useMemo(() => {
+    const baseSize = answers ? 12 : 6;
+    const list = recommendedFor(patient, baseSize);
+    if (!answers) return list;
+    const boost: Partial<Record<ProgramCategory, number>> = {
+      transportation: answers.needsTransport === 'yes' ? 1 : 0,
+      food: answers.needsFood === 'yes' ? 1 : 0,
+      therapy: answers.needsTherapy === 'yes' ? 1 : 0,
+      housing: answers.needsHousing === 'yes' ? 1 : 0,
+    };
+    return [...list].sort((a, b) => {
+      const ba = boost[a.program.category] ?? 0;
+      const bb = boost[b.program.category] ?? 0;
+      if (ba !== bb) return bb - ba;
+      return b.score - a.score;
+    });
+  }, [patient, answers]);
   const list: ProgramScore[] = useMemo(() => {
     if (tab === 'recommended') return recommended;
     return programsByCategory(tab as ProgramCategory, patient).slice(0, 30);
@@ -130,6 +172,60 @@ export function Resources() {
       </div>
 
       <div className="p-5 space-y-4">
+        {/* Get a ride — always visible CTA */}
+        <Link
+          to="/resources?tab=transportation"
+          onClick={(e) => {
+            e.preventDefault();
+            setTab('transportation');
+          }}
+          className="bg-gradient-to-br from-green-600 to-emerald-600 text-white rounded-3xl p-5 flex items-center gap-4 border-b-4 border-emerald-800 active:scale-[0.98] shadow-md"
+        >
+          <div className="bg-white/20 p-3 rounded-2xl shrink-0">
+            <Car className="w-8 h-8 text-white" strokeWidth={2.5} />
+          </div>
+          <div className="flex-1">
+            <div className="font-black text-xl leading-tight">{copy.getRide}</div>
+            <div className="text-sm font-bold text-emerald-50 leading-snug mt-0.5">
+              {copy.getRideSub}
+            </div>
+          </div>
+          <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
+        </Link>
+
+        {/* Personalize CTA / personalized badge */}
+        {answers ? (
+          <Link
+            to="/resources/personalize"
+            className="bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-3 flex items-center gap-3 active:scale-[0.98]"
+          >
+            <Sparkles className="w-5 h-5 text-indigo-600 shrink-0" />
+            <div className="flex-1">
+              <div className="font-black text-indigo-900 text-sm leading-tight">
+                {copy.personalized}
+              </div>
+              <div className="text-xs font-bold text-indigo-700">{copy.retake}</div>
+            </div>
+            <ChevronRight className="w-5 h-5 text-indigo-500 shrink-0" />
+          </Link>
+        ) : (
+          <Link
+            to="/resources/personalize"
+            className="bg-white border-2 border-dashed border-indigo-300 rounded-2xl p-4 flex items-center gap-3 active:bg-indigo-50"
+          >
+            <div className="bg-indigo-100 p-2 rounded-xl shrink-0">
+              <Wand2 className="w-5 h-5 text-indigo-700" strokeWidth={2.5} />
+            </div>
+            <div className="flex-1">
+              <div className="font-black text-indigo-900 text-base leading-tight">
+                {copy.personalize}
+              </div>
+              <div className="text-xs font-bold text-indigo-700">{copy.personalizeSub}</div>
+            </div>
+            <ChevronRight className="w-5 h-5 text-indigo-500 shrink-0" />
+          </Link>
+        )}
+
         {tab === 'recommended' && (
           <div className="bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-2xl p-4 flex items-center gap-3">
             <Sparkles className="w-7 h-7 text-indigo-600 shrink-0" />

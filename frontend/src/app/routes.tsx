@@ -6,6 +6,8 @@ import { Medications } from './pages/Medications';
 import { Appointments } from './pages/Appointments';
 import { WarningSigns } from './pages/WarningSigns';
 import { Resources } from './pages/Resources';
+import { FAQ } from './pages/FAQ';
+import { PersonalizeQuiz } from './pages/PersonalizeQuiz';
 import { Login } from './pages/Login';
 import { usePatient } from './context/PatientContext';
 
@@ -30,6 +32,8 @@ export const router = createBrowserRouter([
           { path: 'appointments', Component: Appointments },
           { path: 'warnings', Component: WarningSigns },
           { path: 'resources', Component: Resources },
+          { path: 'resources/personalize', Component: PersonalizeQuiz },
+          { path: 'faq', Component: FAQ },
         ],
       },
     ],

@@ -5,7 +5,7 @@ export const patient = {
 
 export const ui = {
   en: {
-    nav: { home: "Home", meds: "Meds", visits: "Visits", help: "Help" },
+    nav: { home: "Home", meds: "Meds", visits: "Visits", help: "Resources", faq: "FAQ" },
     common: { back: "Back", done: "Done", pending: "To Do" },
     dash: {
        greeting: "Hello",
@@ -48,7 +48,7 @@ export const ui = {
     }
   },
   es: {
-    nav: { home: "Inicio", meds: "Medicinas", visits: "Visitas", help: "Ayuda" },
+    nav: { home: "Inicio", meds: "Medicinas", visits: "Visitas", help: "Recursos", faq: "FAQ" },
     common: { back: "Volver", done: "Hecho", pending: "Falta" },
     dash: {
        greeting: "Hola",

@@ -1,44 +1,55 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Heart, ChevronRight, Search } from 'lucide-react';
+import { Heart, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 import { usePatient } from '../context/PatientContext';
 import { useLanguage } from '../context/LanguageContext';
-import { plainDiagnosis } from '../data/plainLanguage';
 
 export function Login() {
   const { allPatients, selectPatient } = usePatient();
   const { lang, toggleLang } = useLanguage();
   const navigate = useNavigate();
-  const [query, setQuery] = useState('');
+  const [mrn, setMrn] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const copy = {
     en: {
-      title: 'Welcome',
-      subtitle: 'Choose the child you are caring for',
-      search: 'Search by name or MRN',
-      mrn: 'MRN',
-      reason: 'Reason at hospital',
+      title: 'Sign in',
+      subtitle: 'Enter the MRN from your discharge papers',
+      label: 'Medical Record Number (MRN)',
+      placeholder: 'e.g. MRN001',
+      continue: 'Continue',
+      privacy: 'For demo only — no real authentication.',
+      notFound: 'No record found for that MRN.',
+      empty: 'Please enter an MRN.',
     },
     es: {
-      title: 'Bienvenida',
-      subtitle: 'Elige al niño/a que estás cuidando',
-      search: 'Buscar por nombre o MRN',
-      mrn: 'MRN',
-      reason: 'Razón en el hospital',
+      title: 'Iniciar sesión',
+      subtitle: 'Ingresa el MRN de tus papeles de alta',
+      label: 'Número de expediente médico (MRN)',
+      placeholder: 'ej. MRN001',
+      continue: 'Continuar',
+      privacy: 'Solo para demostración — sin autenticación real.',
+      notFound: 'No se encontró ningún registro para ese MRN.',
+      empty: 'Por favor ingresa un MRN.',
     },
   }[lang];
 
-  const filtered = allPatients.filter((p) => {
-    const q = query.trim().toLowerCase();
-    if (!q) return true;
-    return (
-      p.name.toLowerCase().includes(q) ||
-      p.mrn.toLowerCase().includes(q)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = mrn.trim();
+    if (!trimmed) {
+      setError(copy.empty);
+      return;
+    }
+    const match = allPatients.find(
+      (p) => p.mrn.toLowerCase() === trimmed.toLowerCase(),
     );
-  });
-
-  const handleSelect = (id: string) => {
-    selectPatient(id);
+    if (!match) {
+      setError(copy.notFound);
+      return;
+    }
+    setError(null);
+    selectPatient(match.id);
     navigate('/');
   };
 
@@ -62,42 +73,50 @@ export function Login() {
           <p className="text-indigo-100 font-medium text-lg">{copy.subtitle}</p>
         </div>
 
-        <div className="px-5 -mt-6 mb-4">
-          <div className="bg-white rounded-2xl shadow-md flex items-center gap-3 px-4 py-3 border-2 border-gray-100">
-            <Search className="w-6 h-6 text-gray-400" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={copy.search}
-              className="flex-1 outline-none text-lg font-medium text-gray-900"
-            />
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-y-auto px-5 pb-8 space-y-3">
-          {filtered.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => handleSelect(p.id)}
-              className="w-full text-left bg-white border-2 border-gray-200 rounded-2xl p-5 shadow-sm active:scale-[0.98] transition-transform flex items-center gap-4 hover:border-indigo-300"
+        <form
+          onSubmit={handleSubmit}
+          className="flex-1 flex flex-col px-5 pb-8 -mt-6"
+        >
+          <div className="bg-white rounded-3xl shadow-md border-2 border-indigo-100 p-6">
+            <label
+              htmlFor="mrn"
+              className="text-xs font-black uppercase tracking-widest text-indigo-700 block mb-2"
             >
-              <div className="w-14 h-14 rounded-full bg-indigo-100 text-indigo-700 font-black text-xl flex items-center justify-center shrink-0">
-                {p.name.split(' ').map((n) => n[0]).slice(0, 2).join('')}
+              {copy.label}
+            </label>
+            <input
+              id="mrn"
+              type="text"
+              autoFocus
+              autoComplete="off"
+              value={mrn}
+              onChange={(e) => {
+                setMrn(e.target.value);
+                if (error) setError(null);
+              }}
+              placeholder={copy.placeholder}
+              className="w-full text-2xl font-black tracking-wider text-gray-900 bg-gray-50 border-2 border-gray-200 rounded-2xl px-5 py-4 outline-none focus:border-indigo-400"
+            />
+            {error && (
+              <div className="mt-3 flex items-center gap-2 text-red-700 font-bold text-sm">
+                <AlertCircle className="w-5 h-5 shrink-0" />
+                <span>{error}</span>
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="font-black text-xl text-gray-900 truncate">{p.name}</div>
-                <div className="text-sm font-bold text-gray-500">
-                  {copy.mrn}: {p.mrn} · {p.preferredLanguage}
-                </div>
-                <div className="text-base font-bold text-indigo-700 mt-1 truncate">
-                  {plainDiagnosis(p.dischargeDiagnosis, lang)}
-                </div>
-              </div>
-              <ChevronRight className="w-6 h-6 text-gray-400 shrink-0" />
+            )}
+
+            <button
+              type="submit"
+              className="mt-5 w-full bg-indigo-600 text-white font-black text-xl py-4 px-5 rounded-2xl flex items-center justify-center gap-3 border-b-4 border-indigo-800 active:scale-[0.98] shadow-md"
+            >
+              {copy.continue} <ArrowRight className="w-6 h-6" strokeWidth={2.5} />
             </button>
-          ))}
-        </div>
+          </div>
+
+          <div className="mt-5 flex items-start gap-2 text-gray-500 text-xs font-bold px-2">
+            <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5" />
+            <span>{copy.privacy}</span>
+          </div>
+        </form>
       </div>
     </div>
   );
