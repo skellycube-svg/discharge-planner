@@ -1,0 +1,16 @@
+Login Screen:
+- THe flow is wrong this does not protect data. It should just be a screen saying enter mrn. It then uses the mrn to know what row in the patient csv to read.
+
+Homepage layout:
+Goal: Reduce height of the UI by reshaping blue caring for panel, integrating drop downs
+Lets change the purpose of the buttons in the 2x2 grid.
+
+Caring For Blue Panel:
+Goal reduce the vertical of the blue panel.
+Action: Remove the "Caring For" [NAME]. The name is already displayed in the header it does not need to take up half the screen here
+Instead: Just keep the what happened portion. Move it above the chatbot text box.
+
+Red Button "Warning":
+
+Actions:Replace name with "Summary"
+- Map all the content of the Visit summary drop down into a replacement of the warning page.

@@ -1,0 +1,203 @@
+RESOURCE SELECTION — How the Resources tab decides what to show
+================================================================
+
+Source CSV: discharge-planner/data/programs_directory.csv (205 programs)
+Code:       src/app/data/programs.ts
+
+There are two views in the Resources tab:
+  1. "For you" — a personalized, scored top-N list (the default tab).
+  2. Per-category — Food / Rides / Therapy / Housing, still scored for the
+     current patient so the most relevant rise to the top.
+
+Both views use the same scoring function (scoreProgramFor) so behavior is
+consistent. We only show what we can defend with CSV data.
+
+
+----------------------------------------------------------------
+COLUMNS WE READ FROM programs_directory.csv
+----------------------------------------------------------------
+
+Identification + display
+  ID                       — stable React key.
+  Name                     — card title.
+  Category                 — top-level tab routing (food / transportation /
+                             therapy / housing).
+  Subcategory              — the matching key for diagnosis-driven
+                             recommendations (e.g. nutrition_support,
+                             aba_therapy, rideshare_voucher) AND the small
+                             label above the program name.
+  Address                  — shown on card; powers "Directions" deep link
+                             into Google Maps.
+  Phone                    — shown on card; powers "Call" (tel:) deep link.
+  Website                  — powers "Website" button.
+
+Personalization signals
+  Languages                — semicolon-separated language codes
+                             (en; es; vi; ko; zh; ar; hy; tl; fa; km).
+                             Compared against patient.preferred_language
+                             (mapped from name -> code, see below).
+                             Match adds score and surfaces a
+                             "Speaks <Language>" reason on the card.
+  Subcategory              — compared against the diagnosis -> subcategory
+                             map (DIAGNOSIS_TO_SUBCATEGORIES). A hit adds
+                             score and surfaces "Matches your child's care
+                             needs" as a reason.
+  Category                 — when category == "transportation" AND the
+                             patient has follow-up appointments, score is
+                             boosted; transit-shaped subcategories
+                             (hospital_transport, nemt, rideshare_voucher)
+                             additionally surface "Helps you get to
+                             follow-up visits" as a reason. This addresses
+                             Maria's transportation pain point directly.
+
+Trust / honesty signals shown on the card
+  Cost                     — "Free" badge when 0.
+  Child Friendly           — "Kid-friendly" badge.
+  ADA Accessible           — "Wheelchair access" badge.
+  Languages                — non-English languages listed as a chip so
+                             non-English speakers can see at a glance.
+
+Availability / urgency
+  Availability Status      — controls the colored status badge
+                             (open = green, limited = yellow, full = red).
+                             Also drives score: open +2, limited +1,
+                             full -2 (so waitlisted programs sink even if
+                             they would otherwise match).
+  Available Slots          — shown next to "Open today" when > 0.
+  Wait Time (Days)         — shown next to limited/full statuses to set
+                             expectations honestly.
+
+Columns parsed and stored on the Program object but NOT yet used in
+scoring or UI (kept for future filters):
+  Hours (Mon)..(Sun), Service Delivery, Accepted Insurance, Copay,
+  Transportation Assistance, Income Limit (% FPL), Household Size Min,
+  Age Min, Age Max, Residency Required, Insurance Required, Documentation
+  Required, Max Per Week, Base Utilization (%), Seasonal Notes,
+  Next Available, Simulated Utilization (%), API Endpoint,
+  Zip Codes Served.
+
+  We deliberately do NOT filter on Zip Codes Served yet because the
+  patient CSV has no zip code field. When a zip is captured at login we
+  will add a residency filter (servesAllOC || zipCodesServed.includes
+  (patientZip)).
+
+
+----------------------------------------------------------------
+COLUMNS WE READ FROM discharge_instructions_combined.csv
+----------------------------------------------------------------
+
+  patient_name             — used for "Picked for <first name>" banner.
+  preferred_language       — mapped to a language code via
+                             LANGUAGE_NAME_TO_CODE
+                             (Spanish -> es, Vietnamese -> vi, Mandarin
+                             -> zh, Korean -> ko, English -> en, etc.).
+                             That code is what we compare against the
+                             program's Languages column.
+  discharge_diagnosis      — looked up in DIAGNOSIS_TO_SUBCATEGORIES to
+                             produce the list of program Subcategory
+                             values that fit this child's needs.
+  appointments             — presence/non-presence is used as a signal
+                             that this caregiver will need to physically
+                             get to follow-up visits, which boosts
+                             transportation programs. We don't yet read
+                             appointment dates here.
+
+
+----------------------------------------------------------------
+THE SCORING RULE (scoreProgramFor)
+----------------------------------------------------------------
+
+Each program starts at 0. We add:
+
+  +4   Languages contains the patient's language code
+       (and we surface "Speaks <Language>" as a reason
+        only when it isn't English).
+
+  +5   Subcategory is in DIAGNOSIS_TO_SUBCATEGORIES[discharge_diagnosis]
+       (and we surface "Matches your child's care needs").
+
+  +2   Category == "transportation" AND patient has at least one
+       appointment.
+       Of those, the transit-shaped subcategories
+       (hospital_transport / nemt / rideshare_voucher) also surface
+       "Helps you get to follow-up visits" as a reason.
+
+  +2   Availability Status == "open"
+  +1   Availability Status == "limited"
+  -2   Availability Status == "full"
+
+  +1   Cost == 0
+  +1   Child Friendly == true
+  +0.5 ADA Accessible == true
+
+"For you" returns the top 6 with score > 0. Per-category views show all
+programs in that category, sorted by score (so even the long Food list
+leads with the ones most likely to help this patient).
+
+
+----------------------------------------------------------------
+DIAGNOSIS -> SUBCATEGORY MAP (as of this build)
+----------------------------------------------------------------
+
+  Type 1 Diabetes - New Onset
+    -> nutrition_support, infant_nutrition
+
+  Autism Spectrum Disorder - Evaluation
+    -> developmental_therapy, aba_therapy, autism_support,
+       behavioral_health, early_intervention
+
+  Seizure Disorder
+    -> neuropsychology, developmental_therapy, family_therapy
+
+  Asthma Exacerbation
+    -> nutrition_support, rideshare_voucher, nemt
+
+  Acute Gastroenteritis
+    -> nutrition_support, food_pantry, home_delivered_meals
+
+  Allergic Reaction
+    -> food_pantry, nutrition_support
+
+  Fracture - Upper Extremity
+    -> physical_therapy, occupational_therapy, rideshare_voucher
+
+  Appendectomy - Post-operative
+    -> pain_management, home_delivered_meals, nutrition_support
+
+  Pneumonia
+    -> nutrition_support, home_delivered_meals
+
+  Bronchiolitis
+    -> infant_nutrition, nutrition_support, home_delivered_meals
+
+These are clinician-flavored heuristics, not endorsements. The map is
+small enough to extend by hand for any new diagnosis that lands in the
+patient CSV.
+
+
+----------------------------------------------------------------
+WHY THESE CHOICES (mapping back to the persona)
+----------------------------------------------------------------
+
+Maria Rodriguez forgets most of what was said at discharge, fears
+medication mistakes, has no transportation, and reads at a 6th-grade
+level in Spanish. The selection logic is built around her:
+
+  - Language match is the highest-weighted single signal short of
+    diagnosis match, because a program Maria can't communicate with is
+    a program Maria won't use.
+  - Diagnosis match is weighted highest because the whole point of the
+    discharge plan is the child's specific care needs.
+  - Transportation is automatically boosted because Maria has named it
+    as a barrier to attending follow-up visits, and every patient in
+    the CSV has follow-up appointments.
+  - Availability is honest. "Limited" or "Full" programs are still
+    shown so Maria can plan, but they sink in the ranking. The badge
+    color and the wait-day count make the truth obvious without
+    requiring Maria to read fine print.
+  - Cost == 0, child-friendly, and ADA each add small bumps because
+    they remove specific barriers families like Maria's hit at intake.
+
+Anything we don't yet use (zip filter, hours, eligibility rules, FPL
+income thresholds, documentation requirements) is parsed and ready on
+the Program object — wiring it in is a UI change, not a data change.

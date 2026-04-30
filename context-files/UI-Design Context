@@ -1,0 +1,91 @@
+# UI Redesign — Care to Home Companion
+
+Scope: cosmetic refresh of `discharge-planner/frontend/` (React + Vite + Tailwind v4 + Radix + Lucide). Mobile, `max-w-md`. All 8 pages: Login, PersonalizeQuiz, Dashboard, Medications, Appointments, WarningSigns, Resources, FAQ.
+
+## Hard rules (do not touch)
+- Button placements, workflows, copy text, page layout, navigation structure.
+- Existing emoji usage in copy is fine — leave it alone.
+- Semantic colors keep their meaning: red = stop/911, yellow = caution, green = good/done, orange = medication, blue = info/navigation.
+
+## Goal
+Give the app soul. Strip the AI-generated feel. Direction: **calm clinical-warm** (RCHSD lean), blue-heavy, trustworthy, generous whitespace, editorial. Not playful, not childlike, not sterile.
+
+## Design decisions
+
+### 1. Mood
+Calm clinical-warm. Think: a well-designed pediatric clinic waiting room — quiet, confident, human. Not a SaaS dashboard. Not a kid's app.
+
+### 2. Color
+Blue-heavy blend of CHOC + RCHSD. **No purple. No purple-indigo gradients anywhere.**
+
+Proposed palette (to be tuned in implementation):
+- **Primary** — deep RCHSD-style teal-blue (`#0A4D68` range) for headers, primary surfaces, primary buttons.
+- **Secondary** — softer mid-blue (`#3A7CA5` range) for accents, links, secondary surfaces.
+- **Warm neutral** — off-white / warm paper background (`#FAF7F2` or `#F7F4EE`), NOT pure white. Kills the "default Tailwind" feel instantly.
+- **Ink** — near-black with a warm tint (`#1B2430`) for body text, never pure `#000`.
+- **Accent warmth** — a single muted coral or soft amber (`#E8A87C` range) used sparingly for highlights, badges, CTAs that need to feel human (e.g. "I need a ride"). Used as *accent only*, never as a fill on big surfaces.
+- **Semantic** (unchanged meaning, slightly desaturated to fit the palette): red `#C0392B`, amber `#D9822B`, green `#2F855A`, info-blue `#2C7BB6`.
+
+Surfaces are **flat**: solid fills only. Replace every `bg-gradient-*` with a solid color from the palette above. Specifically: the indigo→indigo gradient header (Login/Dashboard/PersonalizeQuiz), indigo→purple progress bars (Dashboard/Appointments/Medications), green→emerald CTA (Resources), and the indigo/purple tinted info card (Resources) all become solid fills.
+
+### 3. Typography
+- **Headings** — `Source Serif 4` (Google Fonts, free). Conservative editorial serif, RCHSD-appropriate, signals trust. Weights 600–700 for h1/h2, 500–600 for h3. Slight negative tracking (`-0.01em`) on display sizes.
+- **Body / UI** — `Source Sans 3` (matched pairing, designed to sit with Source Serif 4). Body 16px min, primary actions 18–20px bold per existing DESIGN.md.
+- Line height generous: 1.5 for body, 1.2 for headings.
+- Numerals: use tabular figures for medication doses, times, counts (`font-variant-numeric: tabular-nums`).
+
+### 4. Shape & surface language
+- Soften the current `rounded-3xl`-on-everything rhythm. Mix radii: large surfaces `rounded-2xl`, cards `rounded-xl`, buttons `rounded-lg` or `rounded-full` (pill) for primary actions. Variation = less AI-template feel.
+- Replace heavy `shadow-lg` drop shadows with **subtle 1px borders** in a warm neutral (`#E8E2D6` over the paper bg) plus a very soft single-layer shadow (`shadow-sm`). Editorial, not floaty.
+- Keep the existing 2–4px colored bottom-border pattern on category cards — that's good and signals meaning. Tune the colors to the new palette.
+
+### 5. Iconography
+Lucide is already installed and used. Standardize to it:
+- Stroke width 1.75 throughout (currently mixed/default 2 looks generic).
+- Icons inherit text color, no boxed/circle backgrounds unless semantic.
+- Existing emoji in copy strings are fine and stay (per user).
+
+### 6. Spacing & density
+Increase vertical breathing room. Section gaps go from `gap-3/4` to `gap-5/6` on top-level stacks. Cards keep their internal padding. The point is to feel *uncrowded*, like a magazine spread, not packed.
+
+### 7. What we are NOT doing (this pass)
+- No motion, no transitions beyond existing `active:scale-95` press feedback.
+- No mascot, no illustrations, no spot art.
+- No texture/grain/paper-fiber backgrounds.
+- No new dependencies beyond adding Google Fonts via `<link>` or `@import`.
+- No copy changes, no layout changes, no component restructuring.
+
+## The "kill AI feel" checklist
+The single biggest tells in the current build, in order:
+1. **Indigo→purple gradients everywhere.** Audit found 9 uses across Login, Dashboard, Resources, PersonalizeQuiz, Appointments, Medications. All become solid blues from the new palette.
+2. **Pure white background + pure black text + uniform `rounded-3xl` cards.** Move to warm off-white bg, warm-tinted ink, varied radii.
+3. **Default Inter-ish sans on everything.** Introduce the Fraunces/Figtree (or Source Serif/Source Sans) pairing.
+4. **Identical card rhythm on every page.** Vary surface treatment between hero/section/list-item — not every block deserves the same shadow + border + radius.
+
+## Implementation plan
+One pass, all 8 pages, in this order so the system propagates cleanly:
+
+1. **Tokens first** — define the palette + font stack as Tailwind v4 `@theme` tokens (`--color-primary`, `--color-paper`, `--color-ink`, `--font-display`, `--font-sans`, etc.) in the global CSS. Add Google Fonts link in `index.html`.
+2. **Layout shell** — update `components/Layout` (background, sticky header, bottom nav) to the new palette + type.
+3. **Login + PersonalizeQuiz** — entry surfaces, set the tone.
+4. **Dashboard** — highest-traffic screen; gradient hero → solid primary surface, todos card rhythm tuned.
+5. **Medications, Appointments, WarningSigns, Resources** — apply the same surface/type treatment; replace remaining gradients.
+6. **FAQ** — typographic pass, lean into the new heading font.
+7. **Pass 2 polish** — sweep for stragglers (any indigo/purple class names, any `shadow-lg`, any pure white/black, any inconsistent radii).
+
+## Accessibility & UX (non-negotiable)
+The user is Maria — caregiver, stressed, sometimes visually impaired users in the broader audience. Every choice below is enforced, not aspirational.
+
+- **Contrast: WCAG AA minimum, AAA preferred.** Body text ≥ 4.5:1; large text (18px+ bold or 24px+) ≥ 3:1; UI components & icons ≥ 3:1. Verify every foreground/background pair before shipping. The warm off-white bg (`#FAF7F2`) with warm-ink text (`#1B2430`) gives ~15:1 — safe. The deep teal-blue primary on paper bg must be checked at every weight.
+- **No transparency on text or critical UI.** No `text-opacity-*`, no `bg-white/60`, no semi-transparent overlays on actionable surfaces. Visually impaired users cannot reliably read translucent text. Use solid colors from the palette.
+- **No "light gray on white" anywhere.** If text is meant to be quieter, use a darker tone of ink at lower weight, not lighter color.
+- **Color is never the only signal.** Every semantic color (red/yellow/green) is paired with an icon AND a text label. Already in DESIGN.md — preserve it.
+- **Focus states must be visible.** 2px solid outline in the primary teal-blue with 2px offset on every interactive element. Do not rely on browser default; do not use `outline-none` without a replacement.
+- **Tap targets ≥ 44×44px.** Already in DESIGN.md — preserve.
+- **Type scales with system font size.** Use `rem` units (Tailwind defaults are fine), not fixed `px` on body. Don't trap text inside fixed-height containers that clip when the user enlarges fonts.
+- **Icons get accessible labels.** Lucide icons that aren't paired with visible text need `aria-label`; decorative icons get `aria-hidden="true"`.
+- **Respect `prefers-reduced-motion`.** We're static this pass anyway, but the existing `active:scale-95` press feedback should be wrapped to no-op under reduced motion.
+- **Test at 360px width and at 200% zoom.** Both should remain usable with no horizontal scroll.
+
+## Open questions (none blocking — flag if you have a preference)
+- The single warm accent (coral `#E8A87C` vs. amber `#D4A24C`) — pick during implementation; both pass contrast as accents only, not as text fills.

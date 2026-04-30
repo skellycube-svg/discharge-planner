@@ -1,0 +1,6 @@
+FAQ: Add more info like  when she should go back to school and what she needs for school cuz they’ll have to give meds there
+
+Fill in the condition placeholder info. No need for coming soon sections in condition or medication, you can google it but use a trusted source
+For the coming soon under the agent tab, replace the coming soon with click here for live support with a microphone icon\
+
+For the resources tab. Do not display all the resources by default. Filter them using the context from the profile csv. Then allow the results to change based on the info gained from "personalized for you", currently it doesnt do anything.
