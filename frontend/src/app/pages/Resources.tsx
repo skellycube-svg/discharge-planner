@@ -18,10 +18,11 @@ import {
   Wand2,
   ChevronRight,
   ChevronLeft,
+  ChevronDown,
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { usePatient } from '../context/PatientContext';
-import { recommendedFor, programsByCategory, scoreProgramFor } from '../data/programs';
+import { recommendedFor, programsByCategory } from '../data/programs';
 import type { Program, ProgramCategory, ProgramScore } from '../data/types';
 import { PERSONALIZE_KEY, type PersonalizeAnswers } from './PersonalizeQuiz';
 
@@ -63,6 +64,12 @@ export function Resources() {
       housing: 'Housing',
       pickedFor: 'Picked for ' + patient.name.split(' ')[0],
       whyMatch: 'Why this fits',
+      howToUse: 'How to use this resource',
+      stepCall: 'Call the number below to reach the program directly.',
+      stepMention: 'Tell them you were referred from CHOC and share your child’s name.',
+      stepBring: 'Bring these documents to your first visit:',
+      stepConfirm: 'Confirm hours, location, and ask about next available openings.',
+      stepNoDocs: 'No documents required — just call to get started.',
       languageMatch: 'Speaks ' + patient.preferredLanguage,
       open: 'Open today',
       limited: 'Limited spots',
@@ -97,6 +104,12 @@ export function Resources() {
       housing: 'Vivienda',
       pickedFor: 'Elegido para ' + patient.name.split(' ')[0],
       whyMatch: 'Por qué te sirve',
+      howToUse: 'Cómo usar este recurso',
+      stepCall: 'Llame al número de abajo para comunicarse con el programa.',
+      stepMention: 'Dígales que viene de CHOC y comparta el nombre de su hijo/a.',
+      stepBring: 'Lleve estos documentos a su primera visita:',
+      stepConfirm: 'Confirme el horario, la ubicación y pregunte por la próxima cita disponible.',
+      stepNoDocs: 'No se requieren documentos — solo llame para comenzar.',
       languageMatch: 'Habla ' + patient.preferredLanguage,
       open: 'Abierto hoy',
       limited: 'Pocos lugares',
@@ -344,9 +357,7 @@ export function Resources() {
 
 function ProgramCard({
   entry,
-  patient,
   copy,
-  lang,
 }: {
   entry: ProgramScore;
   patient: ReturnType<typeof usePatient>['patient'];
@@ -356,9 +367,6 @@ function ProgramCard({
   const p = entry.program;
   const meta = CATEGORY_META[p.category];
   const Icon = meta.icon;
-
-  // Always recompute reasons in current language so toggling re-renders correctly
-  const liveReasons = patient ? scoreProgramFor(p, patient).reasons : entry.reasons;
 
   const tel = p.phone.replace(/[^0-9+]/g, '');
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.address)}`;
@@ -402,19 +410,8 @@ function ProgramCard({
         )}
       </div>
 
-      {/* Why this fits */}
-      {liveReasons.length > 0 && (
-        <div className="bg-paper-raised rounded-2xl border border-hairline p-3 mb-3">
-          <div className="text-xs font-bold uppercase tracking-[0.12em] text-ink-soft mb-1.5">{copy.whyMatch}</div>
-          <ul className="space-y-1">
-            {liveReasons.map((r, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm font-bold text-ink">
-                <CheckCircle2 className="w-4 h-4 text-ok shrink-0 mt-0.5" /> {r[lang]}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {/* How to use this resource */}
+      <HowToUsePanel program={p} copy={copy} />
 
       {/* Address */}
       {p.address && (
@@ -458,6 +455,67 @@ function ProgramCard({
         </div>
       </div>
     </div>
+  );
+}
+
+function HowToUsePanel({ program, copy }: { program: Program; copy: any }) {
+  const [open, setOpen] = useState(false);
+  const docs = program.documentationRequired ?? [];
+  const hasDocs = docs.length > 0;
+
+  return (
+    <div className="bg-paper-raised rounded-2xl border border-hairline mb-3 overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="w-full flex items-center justify-between gap-2 p-3 active:scale-[0.99] transition-transform"
+      >
+        <span className="text-xs font-bold uppercase tracking-[0.12em] text-ink-soft">
+          {copy.howToUse}
+        </span>
+        <ChevronDown
+          className={`w-4 h-4 text-ink-soft shrink-0 transition-transform ${open ? 'rotate-180' : ''}`}
+          strokeWidth={2.5}
+          aria-hidden="true"
+        />
+      </button>
+      {open && (
+        <ol className="px-3 pb-3 space-y-2 text-sm font-bold text-ink list-none">
+          <Step n={1}>{copy.stepCall}</Step>
+          <Step n={2}>{copy.stepMention}</Step>
+          <Step n={3}>
+            {hasDocs ? (
+              <>
+                {copy.stepBring}
+                <ul className="mt-1 ml-1 space-y-0.5 font-bold text-ink-soft">
+                  {docs.map((d, i) => (
+                    <li key={i} className="flex items-start gap-1.5">
+                      <span className="text-ink-soft">•</span>
+                      <span>{d}</span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              copy.stepNoDocs
+            )}
+          </Step>
+          <Step n={4}>{copy.stepConfirm}</Step>
+        </ol>
+      )}
+    </div>
+  );
+}
+
+function Step({ n, children }: { n: number; children: React.ReactNode }) {
+  return (
+    <li className="flex items-start gap-2.5">
+      <span className="shrink-0 w-6 h-6 rounded-full bg-brand-soft text-brand text-xs font-bold flex items-center justify-center mt-0.5">
+        {n}
+      </span>
+      <div className="flex-1 leading-snug">{children}</div>
+    </li>
   );
 }
 
