@@ -43,16 +43,16 @@ export function WarningSigns() {
   }[lang];
 
   return (
-    <div className="flex flex-col h-full bg-white pb-28">
-      <div className="bg-white px-5 py-6 border-b-2 border-gray-100 sticky top-0 z-10 flex items-center gap-4">
-        <Link to="/" className="p-2 -ml-2 rounded-full bg-gray-50 border border-gray-200">
-          <ArrowLeft className="w-7 h-7 text-gray-700" strokeWidth={2.5} />
+    <div className="flex flex-col h-full bg-paper-raised pb-28">
+      <div className="bg-paper-raised px-5 py-6 border-b border-hairline sticky top-0 z-10 flex items-center gap-4">
+        <Link to="/" className="p-2 -ml-2 rounded-full bg-paper-sunken/60 border border-hairline">
+          <ArrowLeft className="w-7 h-7 text-ink-soft" strokeWidth={2.5} />
         </Link>
         <div className="flex items-center gap-2">
-          <Stethoscope className="w-7 h-7 text-indigo-600" />
+          <Stethoscope className="w-7 h-7 text-brand" />
           <div>
-            <h1 className="text-3xl font-black text-gray-900">{copy.title}</h1>
-            <p className="text-base font-bold text-gray-500 mt-0.5">{copy.subtitle}</p>
+            <h1 className="text-3xl font-bold text-ink">{copy.title}</h1>
+            <p className="text-base font-bold text-ink-soft mt-0.5">{copy.subtitle}</p>
           </div>
         </div>
       </div>
@@ -63,56 +63,56 @@ export function WarningSigns() {
             icon={CalendarDays}
             label={copy.admitted}
             value={patient.admissionDate}
-            tint="text-indigo-600 bg-indigo-50 border-indigo-100"
+            tint="text-brand bg-brand-soft border-hairline"
           />
           <SummaryChip
             icon={CalendarDays}
             label={copy.went}
             value={patient.dischargeDate}
-            tint="text-green-700 bg-green-50 border-green-100"
+            tint="text-ok bg-ok-soft border-green-100"
           />
           <SummaryChip
             icon={Clock}
             label={copy.length}
             value={copy.stay(patient.lengthOfStayDays)}
-            tint="text-amber-700 bg-amber-50 border-amber-100"
+            tint="text-warn bg-warn-soft border-amber-100"
           />
           <SummaryChip
             icon={Activity}
             label={copy.condition}
             value={patient.conditionOnDischarge}
-            tint="text-emerald-700 bg-emerald-50 border-emerald-100"
+            tint="text-ok bg-ok-soft border-emerald-100"
           />
         </div>
 
         {patient.hasAllergies ? (
-          <div className="bg-red-50 border-2 border-red-300 rounded-2xl p-4 flex items-center gap-3">
-            <ShieldAlert className="w-8 h-8 text-red-600 shrink-0" />
+          <div className="bg-danger-soft border-2 border-red-300 rounded-2xl p-4 flex items-center gap-3">
+            <ShieldAlert className="w-8 h-8 text-danger shrink-0" />
             <div>
-              <div className="font-black text-red-800 text-sm uppercase tracking-wider">
+              <div className="font-bold text-ink text-sm uppercase tracking-[0.1em]">
                 {copy.allergyBanner}
               </div>
-              <div className="font-black text-red-900 text-xl leading-tight">
+              <div className="font-bold text-red-900 text-xl leading-tight">
                 {patient.allergies}
               </div>
             </div>
           </div>
         ) : (
-          <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-3 flex items-center gap-3">
-            <ShieldAlert className="w-6 h-6 text-green-600 shrink-0" />
+          <div className="bg-ok-soft border border-ok/30 rounded-2xl p-3 flex items-center gap-3">
+            <ShieldAlert className="w-6 h-6 text-ok shrink-0" />
             <div className="font-bold text-green-800">{copy.noAllergy}</div>
           </div>
         )}
 
         {patient.procedures.length > 0 && (
-          <div className="bg-white border-2 border-gray-200 rounded-3xl p-4">
-            <div className="text-xs font-black uppercase tracking-widest text-gray-500 mb-2">
+          <div className="bg-paper-raised border border-hairline rounded-2xl p-4">
+            <div className="text-xs font-bold uppercase tracking-[0.12em] text-ink-soft mb-2">
               {copy.procedures} · {copy.proceduresCount(patient.procedures.length)}
             </div>
             <ul className="space-y-1.5">
               {patient.procedures.map((proc, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm font-bold text-gray-800">
-                  <Sparkles className="w-4 h-4 text-indigo-500 shrink-0 mt-0.5" />
+                <li key={i} className="flex items-start gap-2 text-sm font-bold text-ink">
+                  <Sparkles className="w-4 h-4 text-brand-secondary shrink-0 mt-0.5" />
                   {proc}
                 </li>
               ))}
@@ -121,14 +121,14 @@ export function WarningSigns() {
         )}
 
         {patient.educationalForms.length > 0 && (
-          <div className="bg-white border-2 border-gray-200 rounded-3xl p-4">
-            <div className="text-xs font-black uppercase tracking-widest text-gray-500 mb-2">
+          <div className="bg-paper-raised border border-hairline rounded-2xl p-4">
+            <div className="text-xs font-bold uppercase tracking-[0.12em] text-ink-soft mb-2">
               {copy.forms}
             </div>
             <ul className="space-y-1.5">
               {patient.educationalForms.map((form, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm font-bold text-gray-800">
-                  <ListChecks className="w-4 h-4 text-purple-500 shrink-0 mt-0.5" />
+                <li key={i} className="flex items-start gap-2 text-sm font-bold text-ink">
+                  <ListChecks className="w-4 h-4 text-accent-warm shrink-0 mt-0.5" />
                   {form}
                 </li>
               ))}
@@ -136,12 +136,12 @@ export function WarningSigns() {
           </div>
         )}
 
-        <div className="bg-white border-2 border-gray-200 rounded-3xl p-4">
-          <div className="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">
+        <div className="bg-paper-raised border border-hairline rounded-2xl p-4">
+          <div className="text-xs font-bold uppercase tracking-[0.12em] text-ink-soft mb-1">
             {copy.pcp}
           </div>
-          <div className="font-black text-gray-900 text-base leading-tight">{patient.pcp}</div>
-          <div className="text-sm font-bold text-gray-500 mt-0.5">{patient.pcpPhone}</div>
+          <div className="font-bold text-ink text-base leading-tight">{patient.pcp}</div>
+          <div className="text-sm font-bold text-ink-soft mt-0.5">{patient.pcpPhone}</div>
         </div>
       </div>
     </div>
@@ -163,9 +163,9 @@ function SummaryChip({
     <div className={`rounded-2xl border-2 p-3 ${tint}`}>
       <div className="flex items-center gap-1.5 mb-0.5">
         <Icon className="w-4 h-4" />
-        <span className="text-xs font-black uppercase tracking-widest">{label}</span>
+        <span className="text-xs font-bold uppercase tracking-[0.12em]">{label}</span>
       </div>
-      <div className="font-black text-base leading-tight">{value}</div>
+      <div className="font-bold text-base leading-tight">{value}</div>
     </div>
   );
 }

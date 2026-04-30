@@ -45,6 +45,20 @@ const FAQS: { q: { en: string; es: string }; a: { en: string; es: string } }[] =
       es: 'Las citas de seguimiento detectan problemas a tiempo — sanación lenta, efectos secundarios o síntomas nuevos. No ir es la razón más común por la que los niños regresan al hospital.',
     },
   },
+  {
+    q: { en: 'When can my child go back to school?', es: '¿Cuándo puede mi hijo/a volver a la escuela?' },
+    a: {
+      en: 'Most kids can return after they have been fever-free for 24 hours without medicine, can eat and drink normally, and have enough energy for a full school day. For surgery or broken bones, ask the doctor at the follow-up visit. The Summary page shows your child\'s condition — when in doubt, call the doctor before sending them back.',
+      es: 'La mayoría puede volver cuando lleva 24 horas sin fiebre (sin medicina), come y bebe normal y tiene energía para todo el día escolar. Para cirugía o fracturas, pregunta al doctor en la cita de seguimiento. La página de Resumen muestra el estado de tu hijo/a — si tienes dudas, llama al doctor antes de mandarlo/a.',
+    },
+  },
+  {
+    q: { en: 'What does the school need to give medicine?', es: '¿Qué necesita la escuela para darle la medicina?' },
+    a: {
+      en: 'Most schools require: (1) a signed Medication Authorization form from the doctor, (2) the medicine in its original pharmacy bottle with your child\'s name, and (3) written instructions matching the bottle. Drop everything at the school nurse\'s office — never let your child carry medicine in their backpack unless the doctor signed a self-carry form (often for inhalers or EpiPens). Ask the office for the form on the first day back.',
+      es: 'La mayoría de las escuelas piden: (1) una autorización médica firmada por el doctor, (2) la medicina en su frasco original de la farmacia con el nombre de tu hijo/a, y (3) instrucciones escritas que coincidan con el frasco. Lleva todo a la enfermera de la escuela — no dejes que el niño/a la lleve en la mochila a menos que el doctor firme un permiso (común para inhaladores o EpiPens). Pídele el formulario a la oficina el primer día de regreso.',
+    },
+  },
 ];
 
 export function FAQ() {
@@ -57,35 +71,35 @@ export function FAQ() {
   }[lang];
 
   return (
-    <div className="flex flex-col h-full bg-white pb-28">
-      <div className="bg-white px-5 py-6 border-b-2 border-gray-100 sticky top-0 z-10">
+    <div className="flex flex-col h-full bg-paper pb-28">
+      <div className="bg-paper-raised px-5 py-6 border-b border-hairline sticky top-0 z-10">
         <div className="flex items-center gap-2">
-          <HelpCircle className="w-7 h-7 text-indigo-600" />
-          <h1 className="text-3xl font-black text-gray-900">{copy.title}</h1>
+          <HelpCircle className="w-7 h-7 text-brand" strokeWidth={1.75} aria-hidden="true" />
+          <h1 className="font-display text-3xl font-bold text-ink tracking-tight">{copy.title}</h1>
         </div>
-        <p className="text-base font-bold text-gray-500 mt-1">{copy.subtitle}</p>
+        <p className="text-base font-medium text-ink-soft mt-1">{copy.subtitle}</p>
       </div>
 
       <ul className="p-5 space-y-2">
         {FAQS.map((item, i) => {
           const isOpen = expanded === i;
           return (
-            <li key={i} className="bg-gray-50 rounded-2xl border-2 border-gray-200 overflow-hidden">
+            <li key={i} className="bg-paper-sunken/60 rounded-2xl border border-hairline overflow-hidden">
               <button
                 onClick={() => setExpanded(isOpen ? null : i)}
-                className="w-full text-left px-4 py-3.5 flex items-start gap-3 active:bg-gray-100"
+                className="w-full text-left px-4 py-3.5 flex items-start gap-3 active:bg-paper-sunken"
               >
-                <span className="flex-1 font-black text-gray-900 text-base leading-snug">
+                <span className="flex-1 font-bold text-ink text-base leading-snug">
                   {item.q[lang]}
                 </span>
                 {isOpen ? (
-                  <ChevronUp className="w-5 h-5 text-gray-500 shrink-0 mt-0.5" />
+                  <ChevronUp className="w-5 h-5 text-ink-soft shrink-0 mt-0.5" />
                 ) : (
-                  <ChevronDown className="w-5 h-5 text-gray-500 shrink-0 mt-0.5" />
+                  <ChevronDown className="w-5 h-5 text-ink-soft shrink-0 mt-0.5" />
                 )}
               </button>
               {isOpen && (
-                <div className="px-4 pb-4 text-sm font-medium text-gray-700 leading-relaxed border-t border-gray-200 pt-3">
+                <div className="px-4 pb-4 text-sm font-medium text-ink-soft leading-relaxed border-t border-hairline pt-3">
                   {item.a[lang]}
                 </div>
               )}

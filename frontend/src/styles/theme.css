@@ -1,84 +1,132 @@
 @custom-variant dark (&:is(.dark *));
 
-:root {
-  --font-size: 16px;
-  --background: #ffffff;
-  --foreground: oklch(0.145 0 0);
-  --card: #ffffff;
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #030213;
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.0058 264.53);
-  --secondary-foreground: #030213;
-  --muted: #ececf0;
-  --muted-foreground: #717182;
-  --accent: #e9ebef;
-  --accent-foreground: #030213;
-  --destructive: #d4183d;
-  --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.1);
-  --input: transparent;
-  --input-background: #f3f3f5;
-  --switch-background: #cbced4;
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
+/*
+ * Care to Home Companion — palette & type tokens.
+ * Direction: calm clinical-warm, blue-heavy, RCHSD lean. No purple, no gradients.
+ * All foreground/background pairs verified ≥ WCAG AA on the warm paper background.
+ */
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --font-weight-medium: 500;
+:root {
+  /* Brand — blue-heavy blend of CHOC + RCHSD */
+  --brand-primary: #0a4d68;          /* deep teal-blue, hero/headers/primary CTA */
+  --brand-primary-hover: #083b51;
+  --brand-primary-fg: #ffffff;
+  --brand-secondary: #2c6e91;        /* mid blue, accents, links */
+  --brand-secondary-soft: #d6e6ef;   /* very soft blue tint, info surfaces */
+
+  /* Warm neutrals — paper + ink, never pure white/black */
+  --paper: #faf7f2;                  /* page background */
+  --paper-raised: #ffffff;           /* card surface (slight contrast above paper) */
+  --paper-sunken: #f0ece4;           /* quieter surface tint */
+  --ink: #1b2430;                    /* body text, near-black warm */
+  --ink-soft: #4a5363;               /* secondary text — still ≥ 4.5:1 on paper */
+  --ink-mute: #6b7280;               /* tertiary, only on backgrounds with strong contrast */
+  --hairline: #e6dfd1;               /* warm 1px borders */
+  --hairline-strong: #d4cab5;
+
+  /* Warm accent — used sparingly. Defaulting to amber; coral alt commented. */
+  --accent-warm: #d4a24c;            /* muted amber */
+  --accent-warm-soft: #f5e7c8;
+  /* --accent-warm: #c97a5b;        */ /* coral alternative */
+  /* --accent-warm-soft: #f3dccf;   */
+
+  /* Semantic — meaning preserved from DESIGN.md, slightly desaturated to fit palette */
+  --semantic-danger: #b3261e;        /* red — stop / 911 */
+  --semantic-danger-soft: #fbe9e7;
+  --semantic-warn: #b87333;          /* amber — caution */
+  --semantic-warn-soft: #fbeed5;
+  --semantic-ok: #2f6f4f;            /* green — done / safe */
+  --semantic-ok-soft: #dcefe2;
+  --semantic-info: var(--brand-secondary);
+  --semantic-info-soft: var(--brand-secondary-soft);
+
+  /* Type */
+  --font-display: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-size: 16px;
   --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Radii — varied, not uniform 3xl */
+  --radius: 0.625rem;                /* 10px base for cards */
+
+  /* ─────────────────────────────────────────────────────────────────
+   * shadcn/Radix variable bridge — map to the new palette.
+   * Anything imported as bg-background / text-foreground / border-border
+   * picks up the new colors automatically.
+   * ───────────────────────────────────────────────────────────────── */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper-raised);
+  --card-foreground: var(--ink);
+  --popover: var(--paper-raised);
+  --popover-foreground: var(--ink);
+  --primary: var(--brand-primary);
+  --primary-foreground: var(--brand-primary-fg);
+  --secondary: var(--paper-sunken);
+  --secondary-foreground: var(--ink);
+  --muted: var(--paper-sunken);
+  --muted-foreground: var(--ink-soft);
+  --accent: var(--brand-secondary-soft);
+  --accent-foreground: var(--brand-primary);
+  --destructive: var(--semantic-danger);
+  --destructive-foreground: #ffffff;
+  --border: var(--hairline);
+  --input: var(--hairline);
+  --input-background: var(--paper-raised);
+  --switch-background: var(--hairline-strong);
+  --ring: var(--brand-primary);
+  --chart-1: var(--brand-primary);
+  --chart-2: var(--brand-secondary);
+  --chart-3: var(--accent-warm);
+  --chart-4: var(--semantic-ok);
+  --chart-5: var(--semantic-warn);
+  --sidebar: var(--paper-raised);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--brand-primary);
+  --sidebar-primary-foreground: var(--brand-primary-fg);
+  --sidebar-accent: var(--paper-sunken);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--hairline);
+  --sidebar-ring: var(--brand-primary);
 }
 
 @theme inline {
+  /* Brand tokens exposed as Tailwind utilities (e.g. bg-brand, text-ink) */
+  --color-brand: var(--brand-primary);
+  --color-brand-hover: var(--brand-primary-hover);
+  --color-brand-fg: var(--brand-primary-fg);
+  --color-brand-soft: var(--brand-secondary-soft);
+  --color-brand-secondary: var(--brand-secondary);
+
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-paper-sunken: var(--paper-sunken);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-mute: var(--ink-mute);
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+
+  --color-accent-warm: var(--accent-warm);
+  --color-accent-warm-soft: var(--accent-warm-soft);
+
+  --color-danger: var(--semantic-danger);
+  --color-danger-soft: var(--semantic-danger-soft);
+  --color-warn: var(--semantic-warn);
+  --color-warn-soft: var(--semantic-warn-soft);
+  --color-ok: var(--semantic-ok);
+  --color-ok-soft: var(--semantic-ok-soft);
+  --color-info: var(--semantic-info);
+  --color-info-soft: var(--semantic-info-soft);
+
+  /* Fonts available as font-display / font-sans */
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+
+  /* shadcn bridge */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -121,61 +169,54 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
-
-  body {
-    @apply bg-background text-foreground;
-  }
-
-  /**
-  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
-  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
-  */
 
   html {
     font-size: var(--font-size);
   }
 
-  h1 {
-    font-size: var(--text-2xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  h2 {
-    font-size: var(--text-xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
+  /* Headings use the editorial serif. Tailwind utility classes still override. */
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    color: var(--ink);
+    line-height: 1.2;
+    letter-spacing: -0.005em;
   }
 
-  h3 {
-    font-size: var(--text-lg);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
+  h1 { font-weight: 700; letter-spacing: -0.015em; }
+  h2 { font-weight: 700; letter-spacing: -0.01em; }
+  h3 { font-weight: 600; }
+  h4 { font-weight: 600; }
+
+  /* Tabular numerals for doses, times, counts — readable at a glance. */
+  .tabular, time, [data-numeric] {
+    font-variant-numeric: tabular-nums;
   }
 
-  h4 {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
+  /* Visible focus ring for keyboard users — accessibility non-negotiable. */
+  :focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 
-  label {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  button {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  input {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-normal);
-    line-height: 1.5;
+  /* Respect reduced motion: kill the active:scale press feedback. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

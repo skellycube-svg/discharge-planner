@@ -104,16 +104,17 @@ export function PersonalizeQuiz() {
       const q = copy.questions.zip;
       return (
         <div>
-          <h2 className="font-black text-2xl text-gray-900 leading-tight">{q.q}</h2>
-          <p className="text-base font-bold text-gray-500 mt-1 mb-5">{q.sub}</p>
+          <h2 className="font-display font-bold text-2xl text-ink leading-tight tracking-tight">{q.q}</h2>
+          <p className="text-base font-medium text-ink-soft mt-2 mb-5">{q.sub}</p>
           <input
             type="text"
             inputMode="numeric"
             value={answers.zip}
             onChange={(e) => setField('zip', e.target.value.replace(/\D/g, '').slice(0, 5))}
             placeholder={q.placeholder}
-            className="w-full text-2xl font-black text-gray-900 bg-gray-50 border-2 border-gray-200 rounded-2xl px-5 py-4 outline-none focus:border-indigo-400"
+            className="w-full text-2xl font-bold text-ink bg-paper-raised border border-hairline rounded-xl px-5 py-4 outline-none focus:border-brand focus:ring-2 focus:ring-brand/30 tabular"
             autoFocus
+            aria-label={q.q}
           />
         </div>
       );
@@ -122,22 +123,24 @@ export function PersonalizeQuiz() {
     const val = answers[stepKey] as 'yes' | 'no' | '';
     return (
       <div>
-        <h2 className="font-black text-2xl text-gray-900 leading-tight">{q.q}</h2>
-        <p className="text-base font-bold text-gray-500 mt-1 mb-5">{q.sub}</p>
-        <div className="grid grid-cols-2 gap-3">
+        <h2 className="font-display font-bold text-2xl text-ink leading-tight tracking-tight">{q.q}</h2>
+        <p className="text-base font-medium text-ink-soft mt-2 mb-5">{q.sub}</p>
+        <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label={q.q}>
           {(['yes', 'no'] as const).map((opt) => {
             const selected = val === opt;
             return (
               <button
                 key={opt}
                 onClick={() => setField(stepKey, opt)}
-                className={`rounded-2xl border-2 p-5 font-black text-xl active:scale-95 transition-transform ${
+                role="radio"
+                aria-checked={selected}
+                className={`rounded-xl border p-5 font-semibold text-xl active:scale-95 transition-transform ${
                   selected
-                    ? 'bg-indigo-600 text-white border-indigo-700'
-                    : 'bg-white text-gray-800 border-gray-200'
+                    ? 'bg-brand text-brand-fg border-brand'
+                    : 'bg-paper-raised text-ink border-hairline'
                 }`}
               >
-                {selected && <Check className="w-5 h-5 inline mr-1.5" />}
+                {selected && <Check className="w-5 h-5 inline mr-1.5" strokeWidth={2.25} aria-hidden="true" />}
                 {opt === 'yes' ? copy.yes : copy.no}
               </button>
             );
@@ -148,41 +151,48 @@ export function PersonalizeQuiz() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white pb-28">
-      <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 text-white px-5 pt-6 pb-8">
+    <div className="flex flex-col h-full bg-paper pb-28">
+      <div className="bg-brand text-brand-fg px-5 pt-6 pb-8">
         <div className="flex items-center gap-2 mb-2">
-          <Sparkles className="w-5 h-5 text-yellow-300" />
-          <span className="text-xs font-black uppercase tracking-widest text-indigo-100">
+          <Sparkles className="w-5 h-5 text-accent-warm" strokeWidth={1.75} aria-hidden="true" />
+          <span className="text-xs font-bold uppercase tracking-[0.12em]" style={{ color: '#dceaf2' }}>
             {copy.title}
           </span>
         </div>
-        <p className="font-bold text-indigo-100">{copy.subtitle}</p>
-        <div className="h-2 bg-white/20 rounded-full overflow-hidden mt-4">
+        <p className="font-display font-semibold text-xl tracking-tight">{copy.subtitle}</p>
+        <div
+          className="h-2 bg-paper-raised/20 rounded-full overflow-hidden mt-5"
+          role="progressbar"
+          aria-valuenow={progress}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`Step ${stepIdx + 1} of ${STEPS.length}`}
+        >
           <div
-            className="h-full bg-yellow-300 transition-all"
+            className="h-full bg-accent-warm transition-all"
             style={{ width: `${progress}%` }}
           />
         </div>
-        <div className="text-xs font-black mt-1.5 text-indigo-100">
+        <div className="text-xs font-bold mt-2 tabular" style={{ color: '#dceaf2' }}>
           {stepIdx + 1} / {STEPS.length}
         </div>
       </div>
 
       <div className="p-5 flex-1">{renderQuestion()}</div>
 
-      <div className="p-5 flex gap-2 border-t border-gray-100 bg-white">
+      <div className="p-5 flex gap-2 border-t border-hairline bg-paper-raised">
         <button
           onClick={() => (stepIdx === 0 ? navigate('/resources') : setStepIdx((i) => i - 1))}
-          className="flex-1 bg-white text-gray-700 font-bold text-base py-3 rounded-2xl border-2 border-gray-200 active:scale-95 flex items-center justify-center gap-2"
+          className="flex-1 bg-paper-raised text-ink-soft font-semibold text-base py-3 rounded-xl border border-hairline active:scale-95 flex items-center justify-center gap-2"
         >
-          <ChevronLeft className="w-5 h-5" /> {stepIdx === 0 ? copy.skip : copy.back}
+          <ChevronLeft className="w-5 h-5" strokeWidth={1.75} aria-hidden="true" /> {stepIdx === 0 ? copy.skip : copy.back}
         </button>
         <button
           onClick={handleNext}
-          className="flex-[2] bg-indigo-600 text-white font-black text-base py-3 rounded-2xl border-b-4 border-indigo-800 active:scale-95 flex items-center justify-center gap-2 shadow-md"
+          className="flex-[2] bg-brand hover:bg-brand-hover text-brand-fg font-semibold text-base py-3 rounded-xl active:scale-95 flex items-center justify-center gap-2 transition-colors"
         >
           {isLast ? copy.save : copy.next}
-          {!isLast && <ChevronRight className="w-5 h-5" />}
+          {!isLast && <ChevronRight className="w-5 h-5" strokeWidth={2} aria-hidden="true" />}
         </button>
       </div>
     </div>

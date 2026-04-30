@@ -26,6 +26,7 @@ import {
 import { useLanguage } from '../context/LanguageContext';
 import { usePatient } from '../context/PatientContext';
 import { plainDiagnosis, plainWhatHappened } from '../data/plainLanguage';
+import { getConditionInfo } from '../data/conditionInfo';
 import type { TodoCategory } from '../data/types';
 
 const CATEGORY_ICON: Record<TodoCategory, typeof Heart> = {
@@ -36,10 +37,10 @@ const CATEGORY_ICON: Record<TodoCategory, typeof Heart> = {
 };
 
 const CATEGORY_TINT: Record<TodoCategory, string> = {
-  followup: 'text-purple-600',
-  medication: 'text-blue-600',
-  safety: 'text-red-600',
-  care: 'text-green-600',
+  followup: 'text-brand',
+  medication: 'text-info',
+  safety: 'text-danger',
+  care: 'text-ok',
 };
 
 export function Dashboard() {
@@ -90,7 +91,6 @@ export function Dashboard() {
       todoTitle: 'To-Do',
       todoSub: (done: number, total: number) => `${done} of ${total} done`,
       todoEmpty: 'No special instructions for this visit.',
-      callDoctor: 'Call the doctor',
       sections: 'Discharge Plan',
       meds: 'Medicines',
       medsSub: (n: number) => `${n} to give`,
@@ -109,9 +109,9 @@ export function Dashboard() {
       askChip2: 'When should I worry?',
       conditionTitle: 'About this condition',
       conditionSub: 'Plain-language details',
-      moreInfo: 'More about this condition',
-      moreInfoBody:
-        'Detailed condition info coming soon. For now, see "What happened" above and the Warning Signs page.',
+      whatItIs: 'What it is',
+      recovery: 'Recovery at home',
+      callDoctor: 'When to call the doctor',
       diet: 'Diet at home',
       special: 'Special instructions',
       print: 'Print summary for doctor',
@@ -131,7 +131,6 @@ export function Dashboard() {
       todoTitle: 'Tareas',
       todoSub: (done: number, total: number) => `${done} de ${total} hechos`,
       todoEmpty: 'No hay instrucciones especiales para esta visita.',
-      callDoctor: 'Llamar al doctor',
       sections: 'Plan de Alta',
       meds: 'Medicinas',
       medsSub: (n: number) => `${n} para dar`,
@@ -150,9 +149,9 @@ export function Dashboard() {
       askChip2: '¿Cuándo debo preocuparme?',
       conditionTitle: 'Sobre esta condición',
       conditionSub: 'Detalles en lenguaje sencillo',
-      moreInfo: 'Más sobre esta condición',
-      moreInfoBody:
-        'Información detallada próximamente. Por ahora, mira "Qué pasó" arriba y la página de Señales de Alerta.',
+      whatItIs: 'Qué es',
+      recovery: 'Recuperación en casa',
+      callDoctor: 'Cuándo llamar al doctor',
       diet: 'Dieta en casa',
       special: 'Instrucciones especiales',
       print: 'Imprimir resumen para el doctor',
@@ -174,127 +173,128 @@ export function Dashboard() {
   return (
     <div className="flex flex-col gap-5 pb-28 px-5 pt-5 print:pb-0">
       {/* What happened — slim hero */}
-      <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 text-white rounded-3xl p-5 shadow-lg print:bg-white print:text-black print:shadow-none print:border print:border-gray-300">
-        <div className="text-indigo-100 font-bold text-xs uppercase tracking-widest mb-1 print:text-gray-600">
+      <div className="bg-brand text-brand-fg rounded-2xl p-6 print:bg-white print:text-black print:border print:border-gray-300">
+        <div className="font-bold text-xs uppercase tracking-[0.12em] mb-2 print:text-ink-soft" style={{ color: '#dceaf2' }}>
           {copy.whatHappened}
         </div>
-        <div className="font-black text-xl leading-snug">
+        <div className="font-display font-bold text-2xl leading-[1.2] tracking-tight">
           {plainDiagnosis(patient.dischargeDiagnosis, lang)}
         </div>
-        <p className="text-indigo-50 font-medium text-base mt-1.5 leading-snug print:text-gray-700">
+        <p className="font-sans font-medium text-base mt-2 leading-snug print:text-ink-soft" style={{ color: '#e8f0f5' }}>
           {plainWhatHappened(patient.dischargeDiagnosis, lang)}
         </p>
         <Link
           to="/warnings"
-          className="mt-3 inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 active:scale-95 transition-transform text-white font-bold text-sm px-3 py-1.5 rounded-full border border-white/20 print:hidden"
+          className="mt-4 inline-flex items-center gap-1.5 bg-paper/15 hover:bg-paper/20 active:scale-95 transition-transform text-brand-fg font-semibold text-sm px-4 py-2 rounded-full border border-paper/25 print:hidden"
         >
           {copy.warnings} →
         </Link>
       </div>
 
       {/* AI Assistant chat box (UI only) */}
-      <div className="bg-white rounded-3xl border-2 border-indigo-200 shadow-sm p-4 print:hidden">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="bg-indigo-100 p-1.5 rounded-full">
-            <Bot className="w-4 h-4 text-indigo-700" strokeWidth={2.5} />
+      <div className="bg-paper-raised rounded-xl border border-hairline p-4 print:hidden">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="bg-brand-soft p-1.5 rounded-full">
+            <Bot className="w-4 h-4 text-brand" strokeWidth={1.75} aria-hidden="true" />
           </div>
-          <span className="text-xs font-black uppercase tracking-widest text-indigo-700">
+          <span className="text-xs font-bold uppercase tracking-[0.12em] text-brand">
             {copy.askLabel}
           </span>
         </div>
-        <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2.5">
+        <div className="flex items-center gap-2 bg-paper border border-hairline rounded-xl px-3 py-2.5">
           <input
             type="text"
             placeholder={copy.askPlaceholder}
-            className="flex-1 bg-transparent outline-none text-base font-medium text-gray-900 placeholder-gray-400"
+            className="flex-1 bg-transparent outline-none text-base font-medium text-ink placeholder-ink-mute"
+            aria-label={copy.askLabel}
           />
           <button
             type="button"
             disabled
             aria-label="Send"
-            className="bg-indigo-600 text-white p-2 rounded-xl opacity-70"
+            className="bg-brand text-brand-fg p-2 rounded-lg opacity-70"
           >
-            <SendHorizonal className="w-4 h-4" strokeWidth={2.5} />
+            <SendHorizonal className="w-4 h-4" strokeWidth={2} aria-hidden="true" />
           </button>
         </div>
         <div className="flex flex-wrap gap-2 mt-3">
-          <span className="text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-100 px-3 py-1.5 rounded-full">
+          <span className="text-xs font-semibold bg-brand-soft text-brand border border-hairline px-3 py-1.5 rounded-full">
             {copy.askChip1}
           </span>
-          <span className="text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-100 px-3 py-1.5 rounded-full">
+          <span className="text-xs font-semibold bg-brand-soft text-brand border border-hairline px-3 py-1.5 rounded-full">
             {copy.askChip2}
           </span>
         </div>
       </div>
 
       {/* About this condition (collapsible, closed by default) */}
-      <div className="bg-white border-2 border-gray-200 rounded-3xl overflow-hidden">
+      <div className="bg-paper-raised border border-hairline rounded-xl overflow-hidden">
         <button
           onClick={() => setShowCondition((v) => !v)}
-          className="w-full flex items-center justify-between p-4 active:bg-gray-50"
+          className="w-full flex items-center justify-between p-4 active:bg-paper-sunken/40"
+          aria-expanded={showCondition}
         >
           <div className="flex items-center gap-3">
-            <Info className="w-6 h-6 text-blue-600" />
+            <Info className="w-6 h-6 text-brand-secondary" strokeWidth={1.75} aria-hidden="true" />
             <div className="text-left">
-              <div className="font-black text-gray-900 text-base leading-tight">
+              <div className="font-display font-semibold text-ink text-base leading-tight">
                 {copy.conditionTitle}
               </div>
-              <div className="text-xs font-bold text-gray-500">{copy.conditionSub}</div>
+              <div className="text-xs font-medium text-ink-soft mt-0.5">{copy.conditionSub}</div>
             </div>
           </div>
           {showCondition ? (
-            <ChevronUp className="w-5 h-5 text-gray-500" />
+            <ChevronUp className="w-5 h-5 text-ink-soft" strokeWidth={1.75} aria-hidden="true" />
           ) : (
-            <ChevronDown className="w-5 h-5 text-gray-500" />
+            <ChevronDown className="w-5 h-5 text-ink-soft" strokeWidth={1.75} aria-hidden="true" />
           )}
         </button>
-        {showCondition && (
-          <div className="px-4 pb-4 space-y-3 border-t border-gray-100 pt-4 text-sm font-medium text-gray-800 leading-relaxed">
-            <p className="leading-snug">{plainWhatHappened(patient.dischargeDiagnosis, lang)}</p>
+        {showCondition && (() => {
+          const info = getConditionInfo(patient.dischargeDiagnosis, lang);
+          return (
+            <div className="px-4 pb-4 space-y-3 border-t border-hairline pt-4 text-sm font-medium text-ink leading-relaxed">
+              <InfoBlock title={copy.whatItIs} body={info.whatItIs} tint="info" />
+              <InfoBlock title={copy.recovery} body={info.recovery} tint="ok" />
+              <InfoBlock title={copy.callDoctor} body={info.callDoctor} tint="danger" />
 
-            {patient.diet && (
-              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3">
-                <div className="text-xs font-black uppercase tracking-widest text-amber-700 mb-1">
-                  {copy.diet}
+              {patient.diet && (
+                <div className="bg-warn-soft border border-warn/30 rounded-xl p-3">
+                  <div className="text-xs font-bold uppercase tracking-[0.12em] text-warn mb-1">
+                    {copy.diet}
+                  </div>
+                  <div className="font-semibold text-ink">{patient.diet}</div>
                 </div>
-                <div className="font-bold text-amber-900">{patient.diet}</div>
-              </div>
-            )}
+              )}
 
-            {patient.specialInstructions && (
-              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-3">
-                <div className="text-xs font-black uppercase tracking-widest text-blue-700 mb-1">
-                  {copy.special}
+              {patient.specialInstructions && (
+                <div className="bg-info-soft border border-info/30 rounded-xl p-3">
+                  <div className="text-xs font-bold uppercase tracking-[0.12em] text-brand mb-1">
+                    {copy.special}
+                  </div>
+                  <div className="font-semibold text-ink leading-snug">
+                    {patient.specialInstructions}
+                  </div>
                 </div>
-                <div className="font-bold text-blue-900 leading-snug">
-                  {patient.specialInstructions}
-                </div>
-              </div>
-            )}
-
-            <div className="bg-gray-50 border border-dashed border-gray-300 rounded-2xl p-3">
-              <div className="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">
-                {copy.moreInfo}
-              </div>
-              <div className="font-medium text-gray-600 leading-snug">{copy.moreInfoBody}</div>
+              )}
             </div>
-          </div>
-        )}
+          );
+        })()}
       </div>
 
       {/* TO-DO checklist (collapsible, closed by default) */}
       {totalTodos > 0 ? (
-        <div className="bg-white border-2 border-indigo-200 rounded-3xl shadow-sm overflow-hidden">
+        <div className="bg-paper-raised border border-hairline rounded-xl overflow-hidden">
           <button
             onClick={() => setShowTodos((v) => !v)}
-            className="w-full p-5 active:bg-indigo-50/40"
+            className="w-full p-5 active:bg-paper-sunken/40"
+            aria-expanded={showTodos}
           >
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 min-w-0">
-                <ListChecks className="w-6 h-6 text-indigo-700 shrink-0" strokeWidth={2.5} />
-                <h2 className="font-black text-xl text-gray-900 leading-tight truncate text-left">
+                <ListChecks className="w-6 h-6 text-brand shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                <h2 className="font-display font-bold text-xl text-ink leading-tight truncate text-left tracking-tight">
                   {copy.todoTitle}{' '}
-                  <span className="text-indigo-600">
+                  <span className="text-brand">
                     {new Date().toLocaleDateString(lang === 'es' ? 'es-US' : 'en-US', {
                       month: 'short',
                       day: 'numeric',
@@ -303,20 +303,26 @@ export function Dashboard() {
                 </h2>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <span className="text-xs font-black text-indigo-700 bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-full">
+                <span className="text-xs font-bold text-brand bg-brand-soft border border-hairline px-3 py-1 rounded-full tabular">
                   {copy.todoSub(doneCount, totalTodos)}
                 </span>
                 {showTodos ? (
-                  <ChevronUp className="w-5 h-5 text-gray-500" />
+                  <ChevronUp className="w-5 h-5 text-ink-soft" strokeWidth={1.75} aria-hidden="true" />
                 ) : (
-                  <ChevronDown className="w-5 h-5 text-gray-500" />
+                  <ChevronDown className="w-5 h-5 text-ink-soft" strokeWidth={1.75} aria-hidden="true" />
                 )}
               </div>
             </div>
 
-            <div className="h-2 bg-gray-100 rounded-full overflow-hidden mt-3">
+            <div
+              className="h-2 bg-paper-sunken rounded-full overflow-hidden mt-3"
+              role="progressbar"
+              aria-valuenow={progressPct}
+              aria-valuemin={0}
+              aria-valuemax={100}
+            >
               <div
-                className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all"
+                className="h-full bg-brand transition-all"
                 style={{ width: `${progressPct}%` }}
               />
             </div>
@@ -331,25 +337,26 @@ export function Dashboard() {
                 <li key={t.id}>
                   <button
                     onClick={() => toggle(t.id)}
-                    className={`w-full text-left rounded-2xl p-3 flex items-start gap-3 border-2 transition-colors active:scale-[0.99] ${
+                    aria-pressed={isDone}
+                    className={`w-full text-left rounded-xl p-3 flex items-start gap-3 border transition-colors active:scale-[0.99] ${
                       isDone
-                        ? 'bg-green-50 border-green-200'
-                        : 'bg-gray-50 border-gray-200 hover:border-indigo-200'
+                        ? 'bg-ok-soft border-ok/30'
+                        : 'bg-paper border-hairline hover:border-brand/40'
                     }`}
                   >
                     {isDone ? (
-                      <CheckCircle2 className="w-7 h-7 text-green-600 shrink-0 mt-0.5" strokeWidth={2.5} />
+                      <CheckCircle2 className="w-7 h-7 text-ok shrink-0 mt-0.5" strokeWidth={2} aria-hidden="true" />
                     ) : (
-                      <Circle className="w-7 h-7 text-gray-300 shrink-0 mt-0.5" strokeWidth={2.5} />
+                      <Circle className="w-7 h-7 text-hairline-strong shrink-0 mt-0.5" strokeWidth={2} aria-hidden="true" />
                     )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 mb-0.5">
-                        <Icon className={`w-4 h-4 ${CATEGORY_TINT[t.category]}`} />
-                        <span className={`text-xs font-black uppercase tracking-widest ${CATEGORY_TINT[t.category]}`}>
+                        <Icon className={`w-4 h-4 ${CATEGORY_TINT[t.category]}`} strokeWidth={1.75} aria-hidden="true" />
+                        <span className={`text-xs font-bold uppercase tracking-[0.12em] ${CATEGORY_TINT[t.category]}`}>
                           {t.category}
                         </span>
                       </div>
-                      <div className={`font-bold text-base leading-snug ${isDone ? 'text-green-900 line-through' : 'text-gray-900'}`}>
+                      <div className={`font-semibold text-base leading-snug ${isDone ? 'text-ink-soft line-through' : 'text-ink'}`}>
                         {lang === 'es' ? t.textEs : t.textEn}
                       </div>
                     </div>
@@ -368,6 +375,50 @@ export function Dashboard() {
   );
 }
 
+const TINT_STYLES: Record<string, string> = {
+  info: 'bg-info-soft border-info/30 text-brand',
+  ok: 'bg-ok-soft border-ok/30 text-ok',
+  danger: 'bg-danger-soft border-danger/30 text-danger',
+  warn: 'bg-warn-soft border-warn/30 text-warn',
+};
+
+function InfoBlock({ title, body, tint }: { title: string; body: string; tint: string }) {
+  const cls = TINT_STYLES[tint] ?? TINT_STYLES.info;
+  const sentenceCount = (body.match(/[.!?](?:\s|$)/g) ?? []).length;
+  const collapsible = sentenceCount > 1;
+  const [open, setOpen] = useState(false);
+
+  if (!collapsible) {
+    return (
+      <div className={`border rounded-xl p-3 ${cls}`}>
+        <div className="text-xs font-bold uppercase tracking-[0.12em] mb-1">{title}</div>
+        <div className="font-medium text-ink leading-snug">{body}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`border rounded-xl ${cls} overflow-hidden`}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full px-3 py-2.5 flex items-center justify-between active:opacity-80"
+        aria-expanded={open}
+      >
+        <span className="text-xs font-bold uppercase tracking-[0.12em]">{title}</span>
+        {open ? (
+          <ChevronUp className="w-4 h-4 opacity-70" strokeWidth={1.75} aria-hidden="true" />
+        ) : (
+          <ChevronDown className="w-4 h-4 opacity-70" strokeWidth={1.75} aria-hidden="true" />
+        )}
+      </button>
+      {open && (
+        <div className="px-3 pb-3 font-medium text-ink leading-snug">{body}</div>
+      )}
+    </div>
+  );
+}
+
 function SummaryChip({
   icon: Icon,
   label,
@@ -380,12 +431,12 @@ function SummaryChip({
   tint: string;
 }) {
   return (
-    <div className={`rounded-2xl border-2 p-3 ${tint}`}>
+    <div className={`rounded-xl border p-3 ${tint}`}>
       <div className="flex items-center gap-1.5 mb-0.5">
-        <Icon className="w-4 h-4" />
-        <span className="text-xs font-black uppercase tracking-widest">{label}</span>
+        <Icon className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
+        <span className="text-xs font-bold uppercase tracking-[0.12em]">{label}</span>
       </div>
-      <div className="font-black text-base leading-tight">{value}</div>
+      <div className="font-display font-bold text-base leading-tight">{value}</div>
     </div>
   );
 }
